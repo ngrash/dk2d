@@ -58,7 +58,11 @@ namespace DK2D
             if (mouseButtonEventArgs.Button == Mouse.Button.Left)
             {
                 MapCell cell = _map.MapCoordsToCell(new Vector2f(mouseButtonEventArgs.X, mouseButtonEventArgs.Y));
-                cell.IsClaimed = !cell.IsClaimed;
+
+                if (cell.Terrain is Earth)
+                {
+                    cell.Terrain = new DirtPath();
+                }
             }
         }
 
@@ -89,15 +93,13 @@ namespace DK2D
             {
                 for (int y = 0; y < _map.Height; y++)
                 {
-                    if (_map[x, y].IsClaimed)
-                    {
-                        target.Draw(new RectangleShape
-                            {
-                                Position = new Vector2f(x * TileWidth, y * TileHeight),
-                                Size = new Vector2f(TileWidth, TileHeight),
-                                FillColor = new Color(23, 23, 255, 100)
-                            });
-                    }
+                    MapCell cell = _map[x, y];
+                    _window.Draw(new RectangleShape
+                        {
+                            Position = new Vector2f(x * TileWidth, y * TileHeight),
+                            Size = new Vector2f(TileWidth, TileHeight),
+                            FillColor = cell.Terrain.Color
+                        });
                 }
             }
         }
