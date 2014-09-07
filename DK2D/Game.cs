@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using DK2D.Map;
+using DK2D.Terrains;
 using SFML.Graphics;
 using SFML.Window;
 
@@ -23,6 +24,14 @@ namespace DK2D
             _window.Closed += (sender, args) => _window.Close();
             _window.MouseButtonReleased += WindowOnMouseButtonReleased;
             _map = new Map.Map(TileWidth, TileHeight, WindowWidth / TileWidth, WindowHeight / TileHeight);
+
+            for (int x = 0; x < _map.Width; x++)
+            {
+                for (int y = 0; y < _map.Height; y++)
+                {
+                    _map[x, y].Terrain = new Earth();
+                }
+            }
         }
 
         public void Run()
