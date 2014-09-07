@@ -36,6 +36,11 @@ namespace DK2D
         {
             get
             {
+                if (x < 0 || x >= Width || y < 0 || y >= Height)
+                {
+                    return default(T);
+                }
+
                 return _data[y, x];
             }
 

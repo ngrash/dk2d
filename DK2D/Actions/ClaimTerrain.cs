@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DK2D.Map;
 
 namespace DK2D.Actions
 {
-    class ClaimTerrain
+    class ClaimPath : GameAction
     {
+        public MapCell Cell { get; set; }
     }
 }

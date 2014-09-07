@@ -9,7 +9,7 @@ namespace DK2D.Objects
 
         public Sprite Sprite { get; set; }
 
-        public void Update(float secondsElapsed, Game game)
+        public virtual void Update(float secondsElapsed, Game game)
         {
 
         }

@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DK2D.Actions
+﻿namespace DK2D.Actions
 {
-    class WorkOut
+    class WorkOut : GameAction
     {
     }
 }

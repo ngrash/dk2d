@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using DK2D.Map;
 using DK2D.Objects;
@@ -23,12 +24,12 @@ namespace DK2D
         private readonly RenderWindow _window;
         private readonly Map.Map _map;
 
-        private List<GameObject> _gameObjects = new List<GameObject>();
+        private readonly List<GameObject> _gameObjects = new List<GameObject>();
 
         public Game()
         {
             _window = new RenderWindow(new VideoMode(WindowWidth, WindowHeight), "DK2D");
-            _window.Closed += (sender, args) => _window.Close();
+            _window.Closed += WindowOnClosed;
             _window.MouseButtonReleased += WindowOnMouseButtonReleased;
             _map = new Map.Map(CellWidth, CellHeight, WindowWidth / CellWidth, WindowHeight / CellHeight);
 
@@ -40,6 +41,8 @@ namespace DK2D
                 }
             }
         }
+
+        public Map.Map Map { get { return _map; }}
 
         public void Run()
         {
@@ -58,6 +61,13 @@ namespace DK2D
 
                 _window.Display();
             }
+        }
+
+        private void WindowOnClosed(object sender, EventArgs eventArgs)
+        {
+            Textures.Release();
+
+            _window.Close();
         }
 
         private void WindowOnMouseButtonReleased(object sender, MouseButtonEventArgs mouseButtonEventArgs)
@@ -120,6 +130,17 @@ namespace DK2D
                             Size = new Vector2f(CellWidth, CellHeight),
                             FillColor = cell.Terrain.Color
                         });
+
+                    // Draw overlay
+                    if (cell.Considered || cell.Choosen)
+                    {
+                        _window.Draw(new RectangleShape
+                            {
+                                Position = new Vector2f(x*CellWidth, y*CellHeight),
+                                Size = new Vector2f(CellWidth, CellHeight),
+                                FillColor = cell.Choosen ? new Color(0, 255, 0, 100) : new Color(0, 0, 255, 100)
+                            });
+                    }
                 }
             }
 

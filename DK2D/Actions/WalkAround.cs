@@ -1,6 +1,6 @@
 ﻿namespace DK2D.Actions
 {
-    class GoTo
+    class WalkAround : GameAction
     {
     }
 }

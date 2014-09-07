@@ -13,9 +13,19 @@ namespace DK2D
             Widget
         }
 
-        private static List<RenderTexture> _textures = new List<RenderTexture>();
+        private static readonly List<RenderTexture> RenderTextures = new List<RenderTexture>();
 
         public static readonly Texture Imp = TextureFrom(new CircleShape {FillColor = Colors.Imp, Radius = 5}, Size.Widget);
+
+        public static void Release()
+        {
+            foreach (RenderTexture renderTexture in RenderTextures)
+            {
+                renderTexture.Dispose();
+            }
+
+            RenderTextures.Clear();
+        }
 
         private static Texture TextureFrom(Shape shape, Size size)
         {
@@ -25,7 +35,7 @@ namespace DK2D
 
             renderTexture.Draw(shape);
 
-            _textures.Add(renderTexture);
+            RenderTextures.Add(renderTexture);
             return renderTexture.Texture;
         }
 
