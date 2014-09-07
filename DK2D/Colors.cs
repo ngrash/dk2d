@@ -12,6 +12,8 @@ namespace DK2D
 
         public static readonly Color ClaimedPath = ColorFrom(DrawingColor.LightGray);
 
+        public static readonly Color Imp = ColorFrom(DrawingColor.Brown);
+
         private static Color ColorFrom(DrawingColor color)
         {
             return new Color(color.R, color.G, color.B, color.A);

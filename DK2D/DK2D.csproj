@@ -98,6 +98,7 @@
     <Compile Include="Terrains\ReinforcedWall.cs" />
     <Compile Include="Terrains\Terrain.cs" />
     <Compile Include="Terrains\Water.cs" />
+    <Compile Include="Textures.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

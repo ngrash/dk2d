@@ -1,5 +1,8 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using DK2D.Map;
+using DK2D.Objects;
+using DK2D.Objects.Creatures;
 using DK2D.Terrains;
 using SFML.Graphics;
 using SFML.Window;
@@ -14,11 +17,13 @@ namespace DK2D
         private const int MapWidth = 25;
         private const int MapHeight = 18;
 
-        private const int CellWidth = 32;
-        private const int CellHeight = 32;
+        public const int CellWidth = 32;
+        public const int CellHeight = 32;
 
         private readonly RenderWindow _window;
         private readonly Map.Map _map;
+
+        private List<GameObject> _gameObjects = new List<GameObject>();
 
         public Game()
         {
@@ -69,11 +74,20 @@ namespace DK2D
                 {
                     cell.Terrain = new ClaimedPath();
                 }
+                else if (cell.Terrain is ClaimedPath)
+                {
+                    Vector2f coords = _window.MapPixelToCoords(new Vector2i(mouseButtonEventArgs.X, mouseButtonEventArgs.Y));
+                    _gameObjects.Add(new Imp { Position = coords });
+                }
             }
         }
 
         private void Update(float secondsElapsed)
         {
+            foreach (GameObject gameObject in _gameObjects)
+            {
+                gameObject.Update(secondsElapsed, this);
+            }
         }
 
         private void Draw(RenderTarget target)
@@ -107,6 +121,13 @@ namespace DK2D
                             FillColor = cell.Terrain.Color
                         });
                 }
+            }
+
+            // Draw game objects
+            foreach (GameObject gameObject in _gameObjects)
+            {
+                gameObject.Sprite.Position = gameObject.Position;
+                _window.Draw(gameObject.Sprite);
             }
         }
     }
