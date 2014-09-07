@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using DK2D.Map;
 using DK2D.Terrains;
 using SFML.Graphics;
@@ -9,11 +8,14 @@ namespace DK2D
 {
     internal class Game
     {
-        private const int WindowWidth = 800;
-        private const int WindowHeight = 600;
+        private const int WindowWidth = MapWidth * CellWidth;
+        private const int WindowHeight = MapHeight * CellHeight;
 
-        private const int TileWidth = 32;
-        private const int TileHeight = 32;
+        private const int MapWidth = 25;
+        private const int MapHeight = 18;
+
+        private const int CellWidth = 32;
+        private const int CellHeight = 32;
 
         private readonly RenderWindow _window;
         private readonly Map.Map _map;
@@ -23,7 +25,7 @@ namespace DK2D
             _window = new RenderWindow(new VideoMode(WindowWidth, WindowHeight), "DK2D");
             _window.Closed += (sender, args) => _window.Close();
             _window.MouseButtonReleased += WindowOnMouseButtonReleased;
-            _map = new Map.Map(TileWidth, TileHeight, WindowWidth / TileWidth, WindowHeight / TileHeight);
+            _map = new Map.Map(CellWidth, CellHeight, WindowWidth / CellWidth, WindowHeight / CellHeight);
 
             for (int x = 0; x < _map.Width; x++)
             {
@@ -79,14 +81,14 @@ namespace DK2D
             target.Clear();
 
             // Draw background
-            for (int x = 0; x <= WindowWidth/TileWidth; x++)
+            for (int x = 0; x <= WindowWidth/CellWidth; x++)
             {
-                for (int y = 0; y <= WindowHeight/TileHeight; y++)
+                for (int y = 0; y <= WindowHeight/CellHeight; y++)
                 {
                     target.Draw(new RectangleShape
                         {
-                            Position = new Vector2f(x * TileWidth, y * TileHeight),
-                            Size = new Vector2f(TileWidth, TileHeight),
+                            Position = new Vector2f(x * CellWidth, y * CellHeight),
+                            Size = new Vector2f(CellWidth, CellHeight),
                             FillColor = (x % 2 == 0 && y % 2 == 0) || (x % 2 == 1 && y % 2 == 1) ? new Color(42, 42, 42) : new Color(23, 23, 23)
                         });
                 }
@@ -100,8 +102,8 @@ namespace DK2D
                     MapCell cell = _map[x, y];
                     _window.Draw(new RectangleShape
                         {
-                            Position = new Vector2f(x * TileWidth, y * TileHeight),
-                            Size = new Vector2f(TileWidth, TileHeight),
+                            Position = new Vector2f(x * CellWidth, y * CellHeight),
+                            Size = new Vector2f(CellWidth, CellHeight),
                             FillColor = cell.Terrain.Color
                         });
                 }
