@@ -63,6 +63,10 @@ namespace DK2D
                 {
                     cell.Terrain = new DirtPath();
                 }
+                else if (cell.Terrain is DirtPath)
+                {
+                    cell.Terrain = new ClaimedPath();
+                }
             }
         }
 
