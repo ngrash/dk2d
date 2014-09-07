@@ -1,6 +1,6 @@
-namespace DK2D
+namespace DK2D.Terrains
 {
-    class Lava : Tarrain
+    class Lava : Terrain
     {
     }
 }

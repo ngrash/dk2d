@@ -1,6 +1,6 @@
-namespace DK2D
+namespace DK2D.Terrains
 {
-    class ImpenetrableRock : Tarrain
+    class ImpenetrableRock : Terrain
     {
     }
 }

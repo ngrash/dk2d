@@ -1,6 +1,6 @@
-namespace DK2D
+namespace DK2D.Terrains
 {
-    class DirtPath : Tarrain
+    class DirtPath : Terrain
     {
     }
 }
