@@ -8,7 +8,30 @@ namespace DK2D.Map
         public static IEnumerable<MapCell> Adjacents(this MapCell cell)
         {
             var map = cell.Map;
-            return new[] { map[cell.X, cell.Y - 1], map[cell.X + 1, cell.Y], map[cell.X, cell.Y + 1], map[cell.X - 1, cell.Y] };
+
+            MapCell north = map[cell.X, cell.Y - 1];
+            if (north != null)
+            {
+                yield return north;
+            }
+
+            MapCell east = map[cell.X + 1, cell.Y];
+            if (east != null)
+            {
+                yield return east;
+            }
+
+            MapCell south = map[cell.X, cell.Y + 1];
+            if (south != null)
+            {
+                yield return south;
+            }
+
+            MapCell west = map[cell.X - 1, cell.Y];
+            if (west != null)
+            {
+                yield return west;
+            }
         }
 
         public static double DistanceTo(this MapCell baseCell, MapCell cell)

@@ -14,8 +14,17 @@ namespace DK2D.Tests
         {
             var map = NewTestMap();
             MapCell cell = map[5, 5];
-            IEnumerable<MapCell> cells = cell.Adjacents();
-            Assert.That(cells, Is.SubsetOf(new[] { map[5, 4], map[6, 5], map[5, 6], map[4, 5] }));
+            IEnumerable<MapCell> adjacents = cell.Adjacents();
+            Assert.That(adjacents, Is.SubsetOf(new[] { map[5, 4], map[6, 5], map[5, 6], map[4, 5] }));
+        }
+
+        [Test]
+        public void ItDoesNotReturnNullAdjacents()
+        {
+            var map = NewTestMap();
+            MapCell cell = map[0, 0];
+            IEnumerable<MapCell> adjacents = cell.Adjacents();
+            Assert.That(adjacents, Is.SubsetOf(new[] { map[1, 0], map[0, 1] }));
         }
 
         [Test]
