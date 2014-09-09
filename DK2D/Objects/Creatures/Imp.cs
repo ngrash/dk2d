@@ -1,5 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
+
 using DK2D.Actions;
 using DK2D.Map;
 using DK2D.Terrains;
@@ -10,12 +11,6 @@ namespace DK2D.Objects.Creatures
 {
     class Imp : Creature
     {
-        private readonly Type[] _priorities = new[]
-            {
-                typeof (MineGold),
-                typeof (ClaimPath)
-            };
-
         private GameAction _targetAction;
         private GameAction _currentAction;
 
@@ -28,74 +23,51 @@ namespace DK2D.Objects.Creatures
         {
             if (_currentAction == null && _targetAction == null)
             {
-                Vector2i cellIndex = game.Map.MapCoordsToCellIndex(Position);
-
-                MapCell cell = game.Map[cellIndex.X, cellIndex.Y];
-
-                GameAction action = FindAction(cell, 5);
-
-                if (action != null)
-                {
-                    _targetAction = action;
-                }
-                else
-                {
-                    _currentAction = new WalkAround();
-                }
-            }
-            else if (_currentAction == null && _targetAction != null)
-            {
-                // Walk to target
-            }
-            else
-            {
-                if (_currentAction is WalkAround)
-                {
-                    
-                }
-                else if (_currentAction is ClaimedPath)
-                {
-                    
-                }
+                ScanEnvironment(game);
             }
         }
 
-        private GameAction FindAction(MapCell current, int iterations)
+        private List<GameAction> ScanEnvironment(Game game)
         {
-            var closed = new Queue<MapCell>();
-            return FindAction(current, closed, iterations);
-        }
+            var possibleActions = new List<GameAction>();
 
-        private GameAction FindAction(MapCell current, Queue<MapCell> closed, int iterations)
-        {
-            GameAction action = GetActionOrNull(current);
-            if (action != null || iterations <= 0)
+            Vector2i cellIndex = game.Map.MapCoordsToCellIndex(Position);
+
+            int cx = cellIndex.X;
+            int cz = cellIndex.Y;
+            const int Cr = 5;
+
+            for (int z = cz - Cr; z <= cz + Cr; z++)
             {
-                return action;
-            }
-
-            closed.Enqueue(current);
-
-            if (!(current.Terrain is Earth))
-            {
-                foreach (MapCell neighbor in current.DirectNeighbors)
+                for (int x = cx - Cr; x <= cx + Cr; x++)
                 {
-                    if (!closed.Contains(neighbor))
+                    bool isInCircle = ((x - cx) * (x - cx)) + ((z - cz) * (z - cz)) < Cr * Cr;
+                    if (isInCircle)
                     {
-                        GameAction neighborAction = FindAction(neighbor, closed, iterations - 1);
-                        if (neighborAction != null)
+                        MapCell mapCell = game.Map[x, z];
+                        if (mapCell != null)
                         {
-                            return neighborAction;
+                            GameAction action = GetActionOrNull(mapCell);
+                            if (action != null)
+                            {
+                                possibleActions.Add(action);
+                            }
                         }
                     }
                 }
             }
 
-            return null;
+            return possibleActions;
         }
 
         private GameAction GetActionOrNull(MapCell cell)
         {
+            bool hasClaimedNeighbor = cell.Adjacents().Any(adjacentCell => adjacentCell.IsClaimed);
+            if (!hasClaimedNeighbor)
+            {
+                return null;
+            }
+
             cell.Considered = true;
 
             if (cell.Terrain is DirtPath)
@@ -103,11 +75,13 @@ namespace DK2D.Objects.Creatures
                 cell.Choosen = true;
 
                 Vector2f actionPosition = cell.Map.MapCellIndexToCenterCoords(new Vector2i(cell.X, cell.Y));
-                return new ClaimPath
+                var possibleAction = new ClaimPath
                 {
                     Position = actionPosition,
                     Cell = cell
                 };
+
+                return possibleAction;
             }
 
             return null;
