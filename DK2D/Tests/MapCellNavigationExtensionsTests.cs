@@ -18,6 +18,20 @@ namespace DK2D.Tests
             Assert.That(cells, Is.SubsetOf(new[] { map[5, 4], map[6, 5], map[5, 6], map[4, 5] }));
         }
 
+        [Test]
+        public void ItCalculatesDistanceOf1()
+        {
+            var map = NewTestMap();
+            Assert.That(map[0, 0].DistanceTo(map[0, 1]), Is.EqualTo(1));
+        }
+
+        [Test]
+        public void ItCalculatesDistanceOf2()
+        {
+            var map = NewTestMap();
+            Assert.That(map[0, 0].DistanceTo(map[0, 2]), Is.EqualTo(2));
+        }
+
         private static Map.Map NewTestMap()
         {
             return new Map.Map(1, 1, 10, 10);
