@@ -108,6 +108,15 @@ namespace DK2D
             {
                 gameObject.Update(secondsElapsed, this);
             }
+
+            for (int x = 0; x < _map.Width; x++)
+            {
+                for (int y = 0; y < _map.Height; y++)
+                {
+                    MapCell cell = _map[x, y];
+                    cell.Update(secondsElapsed);
+                }
+            }
         }
 
         private void Draw(RenderTarget target)
@@ -144,12 +153,19 @@ namespace DK2D
                     // Draw overlay
                     if (cell.OverlayColor.HasValue)
                     {
+                        Color color = cell.OverlayColor.Value;
+
+                        if (cell.IsOverlayFadeEnabled)
+                        {
+                            color.A = (byte)(color.A * (1 - cell.OverlayFade));
+                        }
+
                         _window.Draw(
                             new RectangleShape
                                 {
                                     Position = new Vector2f(x * CellWidth, y * CellHeight),
                                     Size = new Vector2f(CellWidth, CellHeight),
-                                    FillColor = cell.OverlayColor.Value
+                                    FillColor = color
                                 });
                     }
                 }

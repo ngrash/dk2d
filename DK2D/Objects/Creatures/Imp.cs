@@ -54,7 +54,7 @@ namespace DK2D.Objects.Creatures
                 GameAction nearestAction = possibleActions.OrderBy(action => action.Cell.DistanceTo(currentCell)).FirstOrDefault();
                 if (nearestAction != null)
                 {
-                    nearestAction.Cell.OverlayColor = Colors.OverlayRed;
+                    nearestAction.Cell.Highlight(Colors.OverlayRed);
                 }
             }
         }
@@ -119,11 +119,11 @@ namespace DK2D.Objects.Creatures
                 return null;
             }
 
-            cell.OverlayColor = Colors.OverlayBlue;
+            cell.Highlight(Colors.OverlayBlue);
 
             if (cell.Terrain is DirtPath)
             {
-                cell.OverlayColor = Colors.OverlayGreen;
+                cell.Highlight(Colors.OverlayGreen);
 
                 Vector2f actionPosition = cell.Map.MapCellIndexToCenterCoords(new Vector2i(cell.X, cell.Y));
                 var possibleAction = new ClaimPath

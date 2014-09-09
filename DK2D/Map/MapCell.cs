@@ -1,4 +1,6 @@
-﻿using DK2D.Rooms;
+﻿using System;
+
+using DK2D.Rooms;
 using DK2D.Terrains;
 
 using SFML.Graphics;
@@ -30,11 +32,40 @@ namespace DK2D.Map
 
         public Color? OverlayColor { get; set; }
 
+        public bool IsOverlayFadeEnabled { get; set; }
+
+        public float OverlayFade { get; set; }
+
+        public float OverlayFadeDuration { get; set; }
+
         public bool IsClaimed
         {
             get
             {
                 return Terrain is ClaimedPath;
+            }
+        }
+
+        public void Highlight(Color color)
+        {
+            Console.WriteLine("Highlight");
+
+            OverlayColor = color;
+            OverlayFade = 0;
+            OverlayFadeDuration = 1;
+            IsOverlayFadeEnabled = true;
+        }
+
+        public void Update(float secondsElapsed)
+        {
+            if (IsOverlayFadeEnabled)
+            {
+                OverlayFade += (1f / OverlayFadeDuration) * secondsElapsed;
+                if (OverlayFade >= 1)
+                {
+                    IsOverlayFadeEnabled = false;
+                    OverlayColor = null;
+                }
             }
         }
     }
