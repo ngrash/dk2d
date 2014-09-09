@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+
 using DK2D.Map;
 using DK2D.Objects;
 using DK2D.Objects.Creatures;
@@ -87,7 +89,15 @@ namespace DK2D
                 else if (cell.Terrain is ClaimedPath)
                 {
                     Vector2f coords = _window.MapPixelToCoords(new Vector2i(mouseButtonEventArgs.X, mouseButtonEventArgs.Y));
-                    _gameObjects.Add(new Imp { Position = coords });
+
+                    if (_gameObjects.Count == 0)
+                    {
+                        _gameObjects.Add(new Imp { Position = coords });
+                    }
+                    else
+                    {
+                        _gameObjects.OfType<Imp>().Single().Path.Add(coords);
+                    }
                 }
             }
         }

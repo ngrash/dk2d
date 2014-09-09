@@ -105,6 +105,7 @@
     <Compile Include="Terrains\Water.cs" />
     <Compile Include="Tests\MapCellNavigationExtensionsTests.cs" />
     <Compile Include="Textures.cs" />
+    <Compile Include="Vector2fExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

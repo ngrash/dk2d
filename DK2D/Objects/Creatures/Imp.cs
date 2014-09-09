@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using DK2D.Actions;
@@ -11,6 +12,10 @@ namespace DK2D.Objects.Creatures
 {
     class Imp : Creature
     {
+        public const float Speed = 40;
+
+        private readonly List<Vector2f> _path = new List<Vector2f>();
+
         private GameAction _targetAction;
         private GameAction _currentAction;
 
@@ -19,8 +24,26 @@ namespace DK2D.Objects.Creatures
             Sprite = new Sprite(Textures.Imp);
         }
 
+        public List<Vector2f> Path
+        {
+            get
+            {
+                return _path;
+            }
+        }
+
         public override void Update(float secondsElapsed, Game game)
         {
+            if (_path.Count > 0)
+            {
+                Vector2f nextPoint = _path[0];
+                bool reachedNextPoint = MoveTowardsPoint(nextPoint, secondsElapsed);
+                if (reachedNextPoint)
+                {
+                    _path.RemoveAt(0);
+                }
+            }
+
             if (_currentAction == null && _targetAction == null)
             {
                 Vector2i cellIndex = game.Map.MapCoordsToCellIndex(Position);
@@ -34,6 +57,27 @@ namespace DK2D.Objects.Creatures
                     nearestAction.Cell.OverlayColor = Colors.OverlayRed;
                 }
             }
+        }
+
+        private bool MoveTowardsPoint(Vector2f goal, float elapsed)
+        {
+            const float Epsilon = 0.1f;
+
+            if (Math.Abs(goal.X - Position.X) < Epsilon && Math.Abs(goal.Y - Position.Y) < Epsilon)
+            {
+                return true;
+            }
+
+            // http://gamedev.stackexchange.com/a/28337
+            Vector2f direction = (goal - Position).Normalize();
+            Position += direction * (Speed * elapsed);
+
+            if (Math.Abs(direction.Dot((goal - Position).Normalize()) + 1) < Epsilon)
+            {
+                Position = goal;
+            }
+
+            return Math.Abs(Position.X - goal.X) < Epsilon && Math.Abs(Position.Y - goal.Y) < Epsilon;
         }
 
         private IEnumerable<GameAction> ScanEnvironment(Vector2i cellIndex, Map.Map map)
