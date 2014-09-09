@@ -22,6 +22,11 @@ namespace DK2D.Map
             }
         }
 
+        public MapCell Get(Vector2i index)
+        {
+            return this[index.X, index.Y];
+        }
+
         public MapCell MapCoordsToCell(Vector2f coords)
         {
             Vector2i index = MapCoordsToCellIndex(coords);

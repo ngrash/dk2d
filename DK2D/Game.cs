@@ -132,13 +132,18 @@ namespace DK2D
                         });
 
                     // Draw overlay
-                    if (cell.Considered || cell.Choosen)
+                    if (cell.Considered || cell.Choosen || cell.Visible)
                     {
+                        Color color = Color.Magenta;
+                        if (cell.Visible) color = new Color(0, 0, 255, 100);
+                        if (cell.Considered) color = new Color(0, 255, 0, 100);
+                        if(cell.Choosen) color = new Color(255, 0, 0, 100);
+
                         _window.Draw(new RectangleShape
                             {
                                 Position = new Vector2f(x*CellWidth, y*CellHeight),
                                 Size = new Vector2f(CellWidth, CellHeight),
-                                FillColor = cell.Choosen ? new Color(0, 255, 0, 100) : new Color(0, 0, 255, 100)
+                                FillColor = color
                             });
                     }
                 }

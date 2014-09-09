@@ -23,15 +23,22 @@ namespace DK2D.Objects.Creatures
         {
             if (_currentAction == null && _targetAction == null)
             {
-                ScanEnvironment(game);
+                Vector2i cellIndex = game.Map.MapCoordsToCellIndex(Position);
+                MapCell currentCell = game.Map.Get(cellIndex);
+
+                IEnumerable<GameAction> possibleActions = ScanEnvironment(cellIndex, game.Map);
+
+                GameAction nearestAction = possibleActions.OrderBy(action => action.Cell.DistanceTo(currentCell)).FirstOrDefault();
+                if (nearestAction != null)
+                {
+                    nearestAction.Cell.Choosen = true;
+                }
             }
         }
 
-        private List<GameAction> ScanEnvironment(Game game)
+        private IEnumerable<GameAction> ScanEnvironment(Vector2i cellIndex, Map.Map map)
         {
             var possibleActions = new List<GameAction>();
-
-            Vector2i cellIndex = game.Map.MapCoordsToCellIndex(Position);
 
             int cx = cellIndex.X;
             int cz = cellIndex.Y;
@@ -44,7 +51,7 @@ namespace DK2D.Objects.Creatures
                     bool isInCircle = ((x - cx) * (x - cx)) + ((z - cz) * (z - cz)) < Cr * Cr;
                     if (isInCircle)
                     {
-                        MapCell mapCell = game.Map[x, z];
+                        MapCell mapCell = map[x, z];
                         if (mapCell != null)
                         {
                             GameAction action = GetActionOrNull(mapCell);
@@ -68,11 +75,11 @@ namespace DK2D.Objects.Creatures
                 return null;
             }
 
-            cell.Considered = true;
+            cell.Visible = true;
 
             if (cell.Terrain is DirtPath)
             {
-                cell.Choosen = true;
+                cell.Considered = true;
 
                 Vector2f actionPosition = cell.Map.MapCellIndexToCenterCoords(new Vector2i(cell.X, cell.Y));
                 var possibleAction = new ClaimPath

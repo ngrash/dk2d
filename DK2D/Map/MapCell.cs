@@ -9,6 +9,8 @@ namespace DK2D.Map
     {
         private bool _considered;
 
+        private bool _visible;
+
         public MapCell(Map map, int x, int y)
         {
             Map = map;
@@ -50,6 +52,20 @@ namespace DK2D.Map
             get
             {
                 return Terrain is ClaimedPath;
+            }
+        }
+
+        public bool Visible
+        {
+            get
+            {
+                return _visible;
+            }
+
+            set
+            {
+                _visible = value;
+                Considered = false;
             }
         }
     }
