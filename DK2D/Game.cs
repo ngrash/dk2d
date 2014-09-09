@@ -177,6 +177,25 @@ namespace DK2D
                 gameObject.Sprite.Position = gameObject.Position;
                 _window.Draw(gameObject.Sprite);
             }
+
+            foreach (var imp in _gameObjects.OfType<Imp>())
+            {
+                var vertices = new VertexArray(PrimitiveType.Lines);
+                vertices.Append(new Vertex(imp.Position) { Color = Colors.DebugPath });
+
+                for (int index = 0; index < imp.Path.Count; index++)
+                {
+                    Vector2f position = imp.Path[index];
+                    if (index != 0)
+                    {
+                        vertices.Append(new Vertex(imp.Path[index - 1]) { Color = Colors.DebugPath });
+                    }
+
+                    vertices.Append(new Vertex(position) { Color = Colors.DebugPath });
+                }
+
+                vertices.Draw(_window, RenderStates.Default);
+            }
         }
     }
 }
