@@ -78,7 +78,7 @@ namespace DK2D.Objects.Creatures
 
             if (!(current.Terrain is Earth))
             {
-                foreach (MapCell neighbor in current.Neighbors)
+                foreach (MapCell neighbor in current.DirectNeighbors)
                 {
                     if (!closed.Contains(neighbor))
                     {

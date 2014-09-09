@@ -80,6 +80,17 @@ namespace DK2D.Map
             }
         }
 
+        public IEnumerable<MapCell> DirectNeighbors
+        {
+            get
+            {
+                if (North != null) yield return North;
+                if (East != null) yield return East;
+                if (South != null) yield return South;
+                if (West != null) yield return West;
+            }
+        }
+
         #endregion
 
         public Terrain Terrain { get; set; }
