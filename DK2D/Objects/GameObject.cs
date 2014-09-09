@@ -11,7 +11,6 @@ namespace DK2D.Objects
 
         public virtual void Update(float secondsElapsed, Game game)
         {
-
         }
     }
 }
