@@ -4,6 +4,7 @@ using System.Linq;
 
 using DK2D.Actions;
 using DK2D.Map;
+using DK2D.Pathfinding;
 using DK2D.Terrains;
 using SFML.Graphics;
 using SFML.Window;
@@ -16,7 +17,6 @@ namespace DK2D.Objects.Creatures
 
         private readonly List<Vector2f> _path = new List<Vector2f>();
 
-        private GameAction _targetAction;
         private GameAction _currentAction;
 
         public Imp()
@@ -43,8 +43,13 @@ namespace DK2D.Objects.Creatures
                     _path.RemoveAt(0);
                 }
             }
+            else
+            {
+                // Reached destination
+                _currentAction = null;
+            }
 
-            if (_currentAction == null && _targetAction == null)
+            if (_currentAction == null)
             {
                 Vector2i cellIndex = game.Map.MapCoordsToCellIndex(Position);
                 MapCell currentCell = game.Map.Get(cellIndex);
@@ -54,7 +59,22 @@ namespace DK2D.Objects.Creatures
                 GameAction nearestAction = possibleActions.OrderBy(action => action.Cell.DistanceTo(currentCell)).FirstOrDefault();
                 if (nearestAction != null)
                 {
+                    _currentAction = nearestAction;
+
                     nearestAction.Cell.Highlight(Colors.OverlayRed);
+
+                    var star = new AStar(i => !(game.Map.Get(i).Terrain is Earth), i => game.Map.Get(i).Adjacents().Select(cell => cell.Position));
+                    List<Vector2i> path = star.FindPath(currentCell.Position, _currentAction.Cell.Position);
+
+                    // We already stand on the first cell
+                    path.RemoveAt(0);
+
+                    Path.Clear();
+                    foreach (Vector2i cell in path)
+                    {
+                        Vector2f coords = game.Map.MapCellIndexToCenterCoords(cell);
+                        Path.Add(coords);
+                    }
                 }
             }
         }

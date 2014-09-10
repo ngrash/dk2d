@@ -18,4 +18,23 @@ namespace DK2D
             return baseVector.X * vector.X + baseVector.Y * vector.Y;
         }
     }
+
+    static class Vector2iExtensions
+    {
+        public static float DistanceTo(this Vector2i baseVector, Vector2i vector)
+        {
+            int x1 = baseVector.X;
+            int y1 = baseVector.Y;
+            int x2 = vector.X;
+            int y2 = vector.Y;
+
+            return (float)Math.Sqrt(Math.Pow(Math.Abs(x1 - x2), 2) + Math.Pow(Math.Abs(y1 - y2), 2));
+        }
+
+        public static bool IsSameAs(this Vector2i baseVector, Vector2i vector)
+        {
+            return baseVector.X == vector.X 
+                && baseVector.Y == vector.Y;
+        }
+    }
 }

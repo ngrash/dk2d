@@ -48,8 +48,6 @@ namespace DK2D.Map
 
         public void Highlight(Color color)
         {
-            Console.WriteLine("Highlight");
-
             OverlayColor = color;
             OverlayFade = 0;
             OverlayFadeDuration = 1;
