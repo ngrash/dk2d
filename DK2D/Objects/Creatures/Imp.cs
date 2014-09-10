@@ -11,9 +11,9 @@ using SFML.Window;
 
 namespace DK2D.Objects.Creatures
 {
-    class Imp : Creature
+    internal class Imp : Creature
     {
-        public const float Speed = 40;
+        private const float Speed = 40;
 
         private readonly List<Vector2f> _path = new List<Vector2f>();
 
@@ -34,7 +34,8 @@ namespace DK2D.Objects.Creatures
 
         public override void Update(float secondsElapsed, Game game)
         {
-            if (_path.Count > 0)
+            bool isAtDestination = _path.Count == 0;
+            if (!isAtDestination)
             {
                 Vector2f nextPoint = _path[0];
                 bool reachedNextPoint = MoveTowardsPoint(nextPoint, secondsElapsed);
@@ -43,38 +44,45 @@ namespace DK2D.Objects.Creatures
                     _path.RemoveAt(0);
                 }
             }
+            else if (_currentAction != null)
+            {
+                _currentAction.Perform(secondsElapsed, this, game);
+                if (_currentAction.IsDone)
+                {
+                    _currentAction = null;
+                }
+            }
             else
             {
-                // Reached destination
-                _currentAction = null;
+                FindSomethingToDo(game);
             }
+        }
 
-            if (_currentAction == null)
+        private void FindSomethingToDo(Game game)
+        {
+            Vector2i cellIndex = game.Map.MapCoordsToCellIndex(Position);
+            MapCell currentCell = game.Map.Get(cellIndex);
+
+            IEnumerable<GameAction> possibleActions = ScanEnvironment(cellIndex, game.Map);
+
+            GameAction nearestAction = possibleActions.OrderBy(action => action.Cell.DistanceTo(currentCell)).FirstOrDefault();
+            if (nearestAction != null)
             {
-                Vector2i cellIndex = game.Map.MapCoordsToCellIndex(Position);
-                MapCell currentCell = game.Map.Get(cellIndex);
+                _currentAction = nearestAction;
 
-                IEnumerable<GameAction> possibleActions = ScanEnvironment(cellIndex, game.Map);
+                nearestAction.Cell.Highlight(Colors.OverlayRed);
 
-                GameAction nearestAction = possibleActions.OrderBy(action => action.Cell.DistanceTo(currentCell)).FirstOrDefault();
-                if (nearestAction != null)
+                var star = new AStar(i => !(game.Map.Get(i).Terrain is Earth), i => game.Map.Get(i).Adjacents().Select(cell => cell.Position));
+                List<Vector2i> path = star.FindPath(currentCell.Position, _currentAction.Cell.Position);
+
+                // We already stand on the first cell
+                path.RemoveAt(0);
+
+                Path.Clear();
+                foreach (Vector2i cell in path)
                 {
-                    _currentAction = nearestAction;
-
-                    nearestAction.Cell.Highlight(Colors.OverlayRed);
-
-                    var star = new AStar(i => !(game.Map.Get(i).Terrain is Earth), i => game.Map.Get(i).Adjacents().Select(cell => cell.Position));
-                    List<Vector2i> path = star.FindPath(currentCell.Position, _currentAction.Cell.Position);
-
-                    // We already stand on the first cell
-                    path.RemoveAt(0);
-
-                    Path.Clear();
-                    foreach (Vector2i cell in path)
-                    {
-                        Vector2f coords = game.Map.MapCellIndexToCenterCoords(cell);
-                        Path.Add(coords);
-                    }
+                    Vector2f coords = game.Map.MapCellIndexToCenterCoords(cell);
+                    Path.Add(coords);
                 }
             }
         }
