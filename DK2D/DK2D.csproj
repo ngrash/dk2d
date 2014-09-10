@@ -107,6 +107,7 @@
     <Compile Include="Tests\AStarTests.cs" />
     <Compile Include="Tests\MapCellNavigationExtensionsTests.cs" />
     <Compile Include="Textures.cs" />
+    <Compile Include="UI\Buttons\Button.cs" />
     <Compile Include="Vector2fExtensions.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -7,6 +7,8 @@ using DK2D.Map;
 using DK2D.Objects;
 using DK2D.Objects.Creatures;
 using DK2D.Terrains;
+using DK2D.UI;
+
 using SFML.Graphics;
 using SFML.Window;
 
@@ -27,6 +29,10 @@ namespace DK2D
         private readonly Map.Map _map;
 
         private readonly List<GameObject> _gameObjects = new List<GameObject>();
+        private readonly Button[] _buttons = new[]
+            {
+                new Button { Color = Colors.Earth, Position = new Vector2f(25, WindowHeight - 50), Size = new Vector2f(30, 30) }
+            };
 
         public Game()
         {
@@ -178,6 +184,7 @@ namespace DK2D
                 _window.Draw(gameObject.Sprite);
             }
 
+            // Draw imp path
             foreach (var imp in _gameObjects.OfType<Imp>())
             {
                 var vertices = new VertexArray(PrimitiveType.Lines);
@@ -195,6 +202,19 @@ namespace DK2D
                 }
 
                 vertices.Draw(_window, RenderStates.Default);
+            }
+
+            // Draw menu
+            foreach (Button button in _buttons)
+            {
+                _window.Draw(new RectangleShape
+                    {
+                        OutlineColor = Color.Black,
+                        OutlineThickness = 5,
+                        Position = button.Position,
+                        FillColor = button.Color,
+                        Size = button.Size
+                    });
             }
         }
     }
