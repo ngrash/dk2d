@@ -5,6 +5,40 @@ namespace DK2D.Map
 {
     static class MapCellNavigationExtensions
     {
+        public static IEnumerable<MapCell> Neighbors(this MapCell cell)
+        {
+            foreach (MapCell adjacent in Adjacents(cell))
+            {
+                yield return adjacent;
+            }
+
+            var map = cell.Map;
+
+            MapCell northEast = map[cell.X + 1, cell.Y - 1];
+            if (northEast != null)
+            {
+                yield return northEast;
+            }
+
+            MapCell southEast = map[cell.X + 1, cell.Y + 1];
+            if (southEast != null)
+            {
+                yield return southEast;
+            }
+
+            MapCell southWest = map[cell.X - 1, cell.Y + 1];
+            if (southWest != null)
+            {
+                yield return southWest;
+            }
+
+            MapCell northWest = map[cell.X - 1, cell.Y - 1];
+            if (northWest != null)
+            {
+                yield return northWest;
+            }
+        }
+
         public static IEnumerable<MapCell> Adjacents(this MapCell cell)
         {
             var map = cell.Map;

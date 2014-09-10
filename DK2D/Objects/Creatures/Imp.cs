@@ -67,7 +67,7 @@ namespace DK2D.Objects.Creatures
 
             GameAction nearestAction =
                 possibleActions.OrderBy(action => action.Cell.DistanceTo(currentCell))
-                               .ThenByDescending(action => action.Cell.Adjacents().Count(adjacent => adjacent.IsClaimed))
+                               .ThenByDescending(action => action.Cell.Neighbors().Count(adjacent => adjacent.IsClaimed))
                                .FirstOrDefault();
             if (nearestAction != null)
             {
