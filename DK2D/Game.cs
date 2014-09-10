@@ -14,14 +14,14 @@ namespace DK2D
 {
     internal class Game
     {
-        private const int WindowWidth = MapWidth * CellWidth;
-        private const int WindowHeight = MapHeight * CellHeight;
+        public const int CellWidth = 32;
+        public const int CellHeight = 32;
 
         private const int MapWidth = 25;
         private const int MapHeight = 18;
 
-        public const int CellWidth = 32;
-        public const int CellHeight = 32;
+        private const int WindowWidth = MapWidth * CellWidth;
+        private const int WindowHeight = MapHeight * CellHeight;
 
         private readonly RenderWindow _window;
         private readonly Map.Map _map;
