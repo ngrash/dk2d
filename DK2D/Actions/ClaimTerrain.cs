@@ -6,7 +6,7 @@ namespace DK2D.Actions
 {
     internal class ClaimPath : GameAction
     {
-        private const float Duration = 2.5f;
+        private const float Duration = 0.5f;
 
         public float PercentCompleted { get; private set; }
 
