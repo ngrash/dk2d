@@ -65,7 +65,10 @@ namespace DK2D.Objects.Creatures
 
             IEnumerable<GameAction> possibleActions = ScanEnvironment(cellIndex, game.Map);
 
-            GameAction nearestAction = possibleActions.OrderBy(action => action.Cell.DistanceTo(currentCell)).FirstOrDefault();
+            GameAction nearestAction =
+                possibleActions.OrderBy(action => action.Cell.DistanceTo(currentCell))
+                               .ThenByDescending(action => action.Cell.Adjacents().Count(adjacent => adjacent.IsClaimed))
+                               .FirstOrDefault();
             if (nearestAction != null)
             {
                 _currentAction = nearestAction;
