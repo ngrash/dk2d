@@ -63,6 +63,7 @@
     <Compile Include="Actions\Sleep.cs" />
     <Compile Include="Actions\WorkOut.cs" />
     <Compile Include="Colors.cs" />
+    <Compile Include="Display.cs" />
     <Compile Include="Map\MapCellNavigationExtensions.cs" />
     <Compile Include="Objects\Creatures\Creature.cs" />
     <Compile Include="Objects\Creatures\Imp.cs" />

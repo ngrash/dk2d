@@ -26,6 +26,7 @@ namespace DK2D
         private const int WindowHeight = MapHeight * CellHeight;
 
         private readonly RenderWindow _window;
+        private readonly Display _display;
         private readonly Map.Map _map;
 
         private readonly List<GameObject> _gameObjects = new List<GameObject>();
@@ -42,6 +43,9 @@ namespace DK2D
             _window = new RenderWindow(new VideoMode(WindowWidth, WindowHeight), "DK2D");
             _window.Closed += WindowOnClosed;
             _window.MouseButtonReleased += WindowOnMouseButtonReleased;
+
+            _display = new Display(_window, new Vector2i(CellWidth, CellHeight));
+
             _map = new Map.Map(CellWidth, CellHeight, WindowWidth / CellWidth, WindowHeight / CellHeight);
 
             for (int x = 0; x < _map.Width; x++)
@@ -179,114 +183,19 @@ namespace DK2D
             target.Clear();
 
             // Draw background
-            for (int x = 0; x <= WindowWidth / CellWidth; x++)
-            {
-                for (int y = 0; y <= WindowHeight / CellHeight; y++)
-                {
-                    target.Draw(new RectangleShape
-                        {
-                            Position = new Vector2f(x * CellWidth, y * CellHeight),
-                            Size = new Vector2f(CellWidth, CellHeight),
-                            FillColor = (x % 2 == 0 && y % 2 == 0) || (x % 2 == 1 && y % 2 == 1) ? new Color(42, 42, 42) : new Color(23, 23, 23)
-                        });
-                }
-            }
+            _display.DrawBackground();
 
             // Draw cells
-            for (int x = 0; x < _map.Width; x++)
-            {
-                for (int y = 0; y < _map.Height; y++)
-                {
-                    MapCell cell = _map[x, y];
-                    _window.Draw(new RectangleShape
-                        {
-                            Position = new Vector2f(x * CellWidth, y * CellHeight),
-                            Size = new Vector2f(CellWidth, CellHeight),
-                            FillColor = cell.Terrain.Color
-                        });
-
-                    // Draw overlay
-                    if (cell.OverlayColor.HasValue)
-                    {
-                        Color color = cell.OverlayColor.Value;
-
-                        if (cell.IsOverlayFadeEnabled)
-                        {
-                            color.A = (byte)(color.A * (1 - cell.OverlayFade));
-                        }
-
-                        _window.Draw(
-                            new RectangleShape
-                                {
-                                    Position = new Vector2f(x * CellWidth, y * CellHeight),
-                                    Size = new Vector2f(CellWidth, CellHeight),
-                                    FillColor = color
-                                });
-                    }
-                }
-            }
+            _display.DrawCells(_map);
 
             // Draw game objects
-            foreach (GameObject gameObject in _gameObjects)
-            {
-                gameObject.Sprite.Position = gameObject.Position;
-                _window.Draw(gameObject.Sprite);
-            }
+            _display.DrawObjects(_gameObjects);
 
             // Imp debug drawings
-            foreach (var imp in _gameObjects.OfType<Imp>())
-            {
-                // Draw path
-                var vertices = new VertexArray(PrimitiveType.Lines);
-                vertices.Append(new Vertex(imp.Position) { Color = Colors.DebugPath });
-
-                for (int index = 0; index < imp.Path.Count; index++)
-                {
-                    Vector2f position = imp.Path[index];
-                    if (index != 0)
-                    {
-                        vertices.Append(new Vertex(imp.Path[index - 1]) { Color = Colors.DebugPath });
-                    }
-
-                    vertices.Append(new Vertex(position) { Color = Colors.DebugPath });
-                }
-
-                vertices.Draw(_window, RenderStates.Default);
-
-                // Draw scan radius
-                _window.Draw(new CircleShape(Imp.ScanRadius * CellWidth)
-                    {
-                        Position = new Vector2f(imp.Position.X - (Imp.ScanRadius * CellWidth), imp.Position.Y - (Imp.ScanRadius * CellWidth)),
-                        FillColor = Color.Transparent,
-                        OutlineColor = Colors.DebugScanRadius,
-                        OutlineThickness = 3
-                    });
-            }
+            _display.DrawImpDebugInfos(_gameObjects.OfType<Imp>());
 
             // Draw menu
-            foreach (Menu menu in _menus)
-            {
-                _window.Draw(new RectangleShape
-                    {
-                        OutlineThickness = 1,
-                        OutlineColor = Colors.MenuOutline,
-                        FillColor = Colors.MenuBackground,
-                        Position = menu.Position,
-                        Size = menu.Size
-                    });
-
-                foreach (Button button in menu.Buttons)
-                {
-                    _window.Draw(new RectangleShape
-                    {
-                        OutlineColor = Colors.MenuOutline,
-                        OutlineThickness = button.IsActive ? 3 : 1,
-                        Position = button.Position + menu.Position,
-                        FillColor = button.Color,
-                        Size = button.Size
-                    });
-                }
-            }
+            _display.DrawMenus(_menus);
         }
     }
 }
