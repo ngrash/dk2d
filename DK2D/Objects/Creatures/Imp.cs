@@ -13,6 +13,8 @@ namespace DK2D.Objects.Creatures
 {
     internal class Imp : Creature
     {
+        public const int ScanRadius = 5;
+
         private const float Speed = 40;
 
         private readonly List<Vector2f> _path = new List<Vector2f>();
@@ -117,7 +119,7 @@ namespace DK2D.Objects.Creatures
 
             int cx = cellIndex.X;
             int cz = cellIndex.Y;
-            const int Cr = 5;
+            const int Cr = ScanRadius;
 
             for (int z = cz - Cr; z <= cz + Cr; z++)
             {

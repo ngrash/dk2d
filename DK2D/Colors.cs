@@ -11,6 +11,7 @@ namespace DK2D
         public static readonly Color OverlayBlue = ColorFrom(DrawingColor.FromArgb(100, 0, 0, 255));
 
         public static readonly Color DebugPath = ColorFrom(DrawingColor.OrangeRed);
+        public static readonly Color DebugScanRadius = ColorFrom(DrawingColor.Firebrick);
 
         public static readonly Color Earth = ColorFrom(DrawingColor.SaddleBrown);
         public static readonly Color DirtPath = ColorFrom(DrawingColor.RosyBrown);

@@ -184,9 +184,10 @@ namespace DK2D
                 _window.Draw(gameObject.Sprite);
             }
 
-            // Draw imp path
+            // Imp debug drawings
             foreach (var imp in _gameObjects.OfType<Imp>())
             {
+                // Draw path
                 var vertices = new VertexArray(PrimitiveType.Lines);
                 vertices.Append(new Vertex(imp.Position) { Color = Colors.DebugPath });
 
@@ -202,6 +203,15 @@ namespace DK2D
                 }
 
                 vertices.Draw(_window, RenderStates.Default);
+
+                // Draw scan radius
+                _window.Draw(new CircleShape(Imp.ScanRadius * CellWidth)
+                    {
+                        Position = new Vector2f(imp.Position.X - (Imp.ScanRadius * CellWidth), imp.Position.Y - (Imp.ScanRadius * CellWidth)),
+                        FillColor = Color.Transparent,
+                        OutlineColor = Colors.DebugScanRadius,
+                        OutlineThickness = 3
+                    });
             }
 
             // Draw menu
