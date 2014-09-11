@@ -1,6 +1,4 @@
-﻿using System;
-
-using DK2D.Terrains;
+﻿using DK2D.Terrains;
 
 using SFML.Window;
 
@@ -13,11 +11,6 @@ namespace DK2D.UI
             Add(new Earth());
             Add(new DirtPath());
             Add(new ClaimedPath());
-        }
-
-        public Button Click(Vector2f screenCoords)
-        {
-            throw new NotImplementedException();
         }
 
         private void Add(Terrain terrain)

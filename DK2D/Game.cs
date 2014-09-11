@@ -29,10 +29,13 @@ namespace DK2D
         private readonly Map.Map _map;
 
         private readonly List<GameObject> _gameObjects = new List<GameObject>();
+
         private readonly List<Menu> _menus = new List<Menu>
             {
                 new TerrainMenu { Position = new Vector2f(10, WindowHeight - 60) }
             };
+
+        private Button _activeButton;
 
         public Game()
         {
@@ -80,9 +83,49 @@ namespace DK2D
 
         private void WindowOnMouseButtonReleased(object sender, MouseButtonEventArgs mouseButtonEventArgs)
         {
+            if (mouseButtonEventArgs.Button == Mouse.Button.Right)
+            {
+                if (_activeButton != null)
+                {
+                    _activeButton.IsActive = false;
+                    _activeButton = null;
+                }
+            }
+
             if (mouseButtonEventArgs.Button == Mouse.Button.Left)
             {
+                foreach (Menu menu in _menus)
+                {
+                    if (mouseButtonEventArgs.X > menu.Position.X
+                        && mouseButtonEventArgs.X < menu.Position.X + menu.Size.X
+                        && mouseButtonEventArgs.Y > menu.Position.Y
+                        && mouseButtonEventArgs.Y < menu.Position.Y + menu.Size.Y)
+                    {
+                        Button button = menu.HitTest(new Vector2f(mouseButtonEventArgs.X, mouseButtonEventArgs.Y));
+
+                        if (button != null)
+                        {
+                            button.IsActive = true;
+
+                            if (_activeButton != null)
+                            {
+                                _activeButton.IsActive = false;
+                            }
+
+                            _activeButton = button;
+                        }
+
+                        return;
+                    }
+                }
+
                 MapCell cell = _map.MapCoordsToCell(new Vector2f(mouseButtonEventArgs.X, mouseButtonEventArgs.Y));
+
+                if (_activeButton != null)
+                {
+                    _activeButton.CellClicked(cell);
+                    return;
+                }
 
                 if (cell.Terrain is Earth)
                 {
@@ -215,7 +258,6 @@ namespace DK2D
             }
 
             // Draw menu
-
             foreach (Menu menu in _menus)
             {
                 _window.Draw(new RectangleShape
@@ -232,7 +274,7 @@ namespace DK2D
                     _window.Draw(new RectangleShape
                     {
                         OutlineColor = Colors.MenuOutline,
-                        OutlineThickness = 1,
+                        OutlineThickness = button.IsActive ? 3 : 1,
                         Position = button.Position + menu.Position,
                         FillColor = button.Color,
                         Size = button.Size
