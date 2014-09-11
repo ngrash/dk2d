@@ -15,7 +15,7 @@ namespace DK2D
 
         private static readonly List<RenderTexture> RenderTextures = new List<RenderTexture>();
 
-        public static readonly Texture Imp = TextureFrom(new CircleShape {FillColor = Colors.Imp, Radius = 5}, Size.Widget);
+        public static readonly Texture Imp = TextureFrom(new CircleShape {FillColor = Colors.CreatureImp, Radius = 5}, Size.Widget);
 
         public static void Release()
         {

@@ -4,7 +4,7 @@ namespace DK2D.Terrains
     {
         public ClaimedPath()
         {
-            Color = Colors.ClaimedPath;
+            Color = Colors.TerrainClaimedPath;
         }
     }
 }

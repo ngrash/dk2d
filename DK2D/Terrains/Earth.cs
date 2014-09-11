@@ -4,7 +4,7 @@ namespace DK2D.Terrains
     {
         public Earth()
         {
-            Color = Colors.Earth;
+            Color = Colors.TerrainEarth;
         }
     }
 }

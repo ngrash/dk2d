@@ -29,9 +29,9 @@ namespace DK2D
         private readonly Map.Map _map;
 
         private readonly List<GameObject> _gameObjects = new List<GameObject>();
-        private readonly Button[] _buttons = new[]
+        private readonly List<Menu> _menus = new List<Menu>
             {
-                new Button { Color = Colors.Earth, Position = new Vector2f(25, WindowHeight - 50), Size = new Vector2f(30, 30) }
+                new TerrainMenu { Position = new Vector2f(10, WindowHeight - 60) }
             };
 
         public Game()
@@ -215,16 +215,29 @@ namespace DK2D
             }
 
             // Draw menu
-            foreach (Button button in _buttons)
+
+            foreach (Menu menu in _menus)
             {
                 _window.Draw(new RectangleShape
                     {
-                        OutlineColor = Color.Black,
-                        OutlineThickness = 5,
-                        Position = button.Position,
+                        OutlineThickness = 1,
+                        OutlineColor = Colors.MenuOutline,
+                        FillColor = Colors.MenuBackground,
+                        Position = menu.Position,
+                        Size = menu.Size
+                    });
+
+                foreach (Button button in menu.Buttons)
+                {
+                    _window.Draw(new RectangleShape
+                    {
+                        OutlineColor = Colors.MenuOutline,
+                        OutlineThickness = 1,
+                        Position = button.Position + menu.Position,
                         FillColor = button.Color,
                         Size = button.Size
                     });
+                }
             }
         }
     }
