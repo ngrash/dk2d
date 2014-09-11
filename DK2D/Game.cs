@@ -53,7 +53,13 @@ namespace DK2D
             }
         }
 
-        public Map.Map Map { get { return _map; }}
+        public Map.Map Map
+        {
+            get
+            {
+                return _map;
+            }
+        }
 
         public void Run()
         {
@@ -61,7 +67,7 @@ namespace DK2D
 
             while (_window.IsOpen())
             {
-                var secondsElapsed = (float) timer.Elapsed.TotalSeconds;
+                var secondsElapsed = (float)timer.Elapsed.TotalSeconds;
                 timer.Restart();
 
                 _window.DispatchEvents();
@@ -173,9 +179,9 @@ namespace DK2D
             target.Clear();
 
             // Draw background
-            for (int x = 0; x <= WindowWidth/CellWidth; x++)
+            for (int x = 0; x <= WindowWidth / CellWidth; x++)
             {
-                for (int y = 0; y <= WindowHeight/CellHeight; y++)
+                for (int y = 0; y <= WindowHeight / CellHeight; y++)
                 {
                     target.Draw(new RectangleShape
                         {

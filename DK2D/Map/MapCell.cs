@@ -1,6 +1,4 @@
-﻿using System;
-
-using DK2D.Rooms;
+﻿using DK2D.Rooms;
 using DK2D.Terrains;
 
 using SFML.Graphics;
@@ -8,7 +6,7 @@ using SFML.Window;
 
 namespace DK2D.Map
 {
-    class MapCell
+    internal class MapCell
     {
         public MapCell(Map map, int x, int y)
         {
