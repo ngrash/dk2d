@@ -13,6 +13,8 @@ namespace DK2D.Objects.Creatures
 {
     internal class Imp : Creature
     {
+        private const bool EnableDebugHighlight = false;
+
         public const int ScanRadius = 5;
 
         private const float Speed = 40;
@@ -94,7 +96,10 @@ namespace DK2D.Objects.Creatures
             {
                 _currentAction = nearestAction;
 
-                nearestAction.Cell.Highlight(Colors.OverlayRed);
+                if (EnableDebugHighlight)
+                {
+                    nearestAction.Cell.Highlight(Colors.OverlayRed);
+                }
 
                 MoveTo(nearestAction.Cell.Position, game);
             }
@@ -139,11 +144,8 @@ namespace DK2D.Objects.Creatures
                         MapCell mapCell = map[x, z];
                         if (mapCell != null)
                         {
-                            GameAction action = GetActionOrNull(mapCell);
-                            if (action != null)
-                            {
-                                possibleActions.Add(action);
-                            }
+                            IEnumerable<GameAction> possibleActionsOnCell = GetActions(mapCell);
+                            possibleActions.AddRange(possibleActionsOnCell);
                         }
                     }
                 }
@@ -152,31 +154,41 @@ namespace DK2D.Objects.Creatures
             return possibleActions;
         }
 
-        private GameAction GetActionOrNull(MapCell cell)
+        private IEnumerable<GameAction> GetActions(MapCell cell)
         {
-            bool hasClaimedNeighbor = cell.Adjacents().Any(adjacentCell => adjacentCell.IsClaimed);
-            if (!hasClaimedNeighbor)
+            if (cell.IsClaimed)
             {
-                return null;
-            }
-
-            cell.Highlight(Colors.OverlayBlue);
-
-            if (cell.Terrain is DirtPath)
-            {
-                cell.Highlight(Colors.OverlayGreen);
-
-                Vector2f actionPosition = cell.Map.MapCellIndexToCenterCoords(new Vector2i(cell.X, cell.Y));
-                var possibleAction = new ClaimPath
+                foreach (MapCell selectedAdjacent in cell.Adjacents().Where(adjacent => adjacent.IsSelected && adjacent.IsPenetrable))
                 {
-                    Position = actionPosition,
-                    Cell = cell
-                };
+                    if (EnableDebugHighlight)
+                    {
+                        selectedAdjacent.Highlight(Colors.OverlayGreen);
+                    }
 
-                return possibleAction;
+                    yield return new Dig { Cell = cell, Target = selectedAdjacent };
+                }
             }
+            else
+            {
+                bool hasClaimedAdjacents = cell.Adjacents().Any(adjacent => adjacent.IsClaimed);
+                if (hasClaimedAdjacents)
+                {
+                    if (cell.Terrain is DirtPath)
+                    {
+                        if (EnableDebugHighlight)
+                        {
+                            cell.Highlight(Colors.OverlayGreen);
+                        }
 
-            return null;
+                        var possibleAction = new ClaimPath
+                        {
+                            Cell = cell
+                        };
+
+                        yield return possibleAction;
+                    }
+                }
+            }
         }
     }
 }

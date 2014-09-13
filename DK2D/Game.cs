@@ -143,7 +143,7 @@ namespace DK2D
                     }
 
                     _selectionStart = null;
-                } 
+                }
                 else if (_mouseOver != null)
                 {
                     _mouseOver.IsSelected = _mouseOver.IsPenetrable;
