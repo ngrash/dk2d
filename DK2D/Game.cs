@@ -136,16 +136,8 @@ namespace DK2D
                     _activeButton.CellClicked(cell);
                     return;
                 }
-
-                if (cell.Terrain is Earth)
-                {
-                    cell.Terrain = new DirtPath();
-                }
-                else if (cell.Terrain is DirtPath)
-                {
-                    cell.Terrain = new ClaimedPath();
-                }
-                else if (cell.Terrain is ClaimedPath)
+                
+                if (cell.Terrain is ClaimedPath)
                 {
                     Vector2f coords = _window.MapPixelToCoords(new Vector2i(mouseButtonEventArgs.X, mouseButtonEventArgs.Y));
 
@@ -155,7 +147,10 @@ namespace DK2D
                     }
                     else
                     {
-                        _gameObjects.OfType<Imp>().Single().Path.Add(coords);
+                        Imp imp = _gameObjects.OfType<Imp>().Single();
+                        Vector2i cellIndex = _map.MapCoordsToCellIndex(coords);
+
+                        imp.MoveTo(cellIndex, this);
                     }
                 }
             }

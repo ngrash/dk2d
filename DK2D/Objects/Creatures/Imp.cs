@@ -60,6 +60,25 @@ namespace DK2D.Objects.Creatures
             }
         }
 
+        public void MoveTo(Vector2i cellIndex, Game game)
+        {
+            Vector2i currentCellIndex = game.Map.MapCoordsToCellIndex(Position);
+            MapCell currentCell = game.Map.Get(currentCellIndex);
+
+            var star = new AStar(i => !(game.Map.Get(i).Terrain is Earth), i => game.Map.Get(i).Adjacents().Select(cell => cell.Position));
+            List<Vector2i> path = star.FindPath(currentCell.Position, cellIndex);
+
+            // We already stand on the first cell
+            path.RemoveAt(0);
+
+            Path.Clear();
+            foreach (Vector2i cell in path)
+            {
+                Vector2f coords = game.Map.MapCellIndexToCenterCoords(cell);
+                Path.Add(coords);
+            }
+        }
+
         private void FindSomethingToDo(Game game)
         {
             Vector2i cellIndex = game.Map.MapCoordsToCellIndex(Position);
@@ -77,18 +96,7 @@ namespace DK2D.Objects.Creatures
 
                 nearestAction.Cell.Highlight(Colors.OverlayRed);
 
-                var star = new AStar(i => !(game.Map.Get(i).Terrain is Earth), i => game.Map.Get(i).Adjacents().Select(cell => cell.Position));
-                List<Vector2i> path = star.FindPath(currentCell.Position, _currentAction.Cell.Position);
-
-                // We already stand on the first cell
-                path.RemoveAt(0);
-
-                Path.Clear();
-                foreach (Vector2i cell in path)
-                {
-                    Vector2f coords = game.Map.MapCellIndexToCenterCoords(cell);
-                    Path.Add(coords);
-                }
+                MoveTo(nearestAction.Cell.Position, game);
             }
         }
 
