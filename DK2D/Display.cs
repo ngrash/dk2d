@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 using DK2D.Map;
 using DK2D.Objects;
@@ -50,6 +51,16 @@ namespace DK2D
                         Size = new Vector2f(_cellSize.X, _cellSize.Y),
                         FillColor = cell.Terrain.Color
                     });
+
+                    if (cell.IsSelected)
+                    {
+                        _target.Draw(new RectangleShape
+                            {
+                                Position = new Vector2f(x * _cellSize.X, y * _cellSize.Y),
+                                Size = new Vector2f(_cellSize.X, _cellSize.Y),
+                                FillColor = Colors.SelectedCell
+                            });
+                    }
 
                     // Draw overlay
                     if (cell.OverlayColor.HasValue)
@@ -147,6 +158,40 @@ namespace DK2D
                     Position = button.Position + menu.Position,
                     FillColor = button.Color,
                     Size = button.Size
+                });
+            }
+        }
+
+        public void DrawSelectionPreview(Map.Map map, MapCell start, MapCell mouseOver)
+        {
+            if (start == null || start == mouseOver)
+            {
+                _target.Draw(new RectangleShape
+                    {
+                        Position = map.MapCellIndexToCoords(mouseOver.Position),
+                        Size = new Vector2f(_cellSize.X, _cellSize.Y),
+                        FillColor = Color.Transparent,
+                        OutlineColor = Colors.SelectedCell,
+                        OutlineThickness = 1
+                    });
+            }
+            else
+            {
+                int minX = Math.Min(start.X, mouseOver.X);
+                int maxX = Math.Max(start.X, mouseOver.X);
+                int minY = Math.Min(start.Y, mouseOver.Y);
+                int maxY = Math.Max(start.Y, mouseOver.Y);
+
+                Vector2f startCoords = map.MapCellIndexToCoords(new Vector2i(minX, minY));
+                Vector2f endCoords = map.MapCellIndexToCoords(new Vector2i(maxX, maxY)) + new Vector2f(_cellSize.X, _cellSize.Y);
+
+                _target.Draw(new RectangleShape
+                {
+                    Position = startCoords,
+                    Size = endCoords - startCoords,
+                    FillColor = Color.Transparent,
+                    OutlineColor = Colors.SelectedCell,
+                    OutlineThickness = 1
                 });
             }
         }

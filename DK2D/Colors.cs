@@ -22,9 +22,17 @@ namespace DK2D
 
         public static readonly Color CreatureImp = ColorFrom(DrawingColor.Brown);
 
+        public static readonly Color SelectedCell = ColorFrom(DrawingColor.Indigo, 100);
+        public static readonly Color SelectedCellOutline = ColorFrom(DrawingColor.Indigo);
+
         private static Color ColorFrom(DrawingColor color)
         {
-            return new Color(color.R, color.G, color.B, color.A);
+            return ColorFrom(color, color.A);
+        }
+
+        private static Color ColorFrom(DrawingColor color, byte alpha)
+        {
+            return new Color(color.R, color.G, color.B, alpha);
         }
     }
 }

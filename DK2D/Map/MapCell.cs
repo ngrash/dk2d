@@ -36,11 +36,21 @@ namespace DK2D.Map
 
         public float OverlayFadeDuration { get; set; }
 
+        public bool IsSelected { get; set; }
+
         public bool IsClaimed
         {
             get
             {
                 return Terrain is ClaimedPath;
+            }
+        }
+
+        public bool IsPenetrable
+        {
+            get
+            {
+                return Terrain is GoldSeam || Terrain is GemSeam || Terrain is Earth;
             }
         }
 
