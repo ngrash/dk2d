@@ -105,7 +105,10 @@ namespace DK2D
         {
             if (mouseButtonEventArgs.Button == Mouse.Button.Left)
             {
-                _selectionStart = _map.MapCoordsToCell(new Vector2f(mouseButtonEventArgs.X, mouseButtonEventArgs.Y));
+                if (_activeButton == null)
+                {
+                    _selectionStart = _map.MapCoordsToCell(new Vector2f(mouseButtonEventArgs.X, mouseButtonEventArgs.Y));
+                }
             }
         }
 
@@ -122,33 +125,6 @@ namespace DK2D
 
             if (mouseButtonEventArgs.Button == Mouse.Button.Left)
             {
-                // Apply selection
-                if (_selectionStart != null && _mouseOver != null)
-                {
-                    bool isSelecting = !_selectionStart.IsSelected;
-
-                    int minX = Math.Min(_selectionStart.X, _mouseOver.X);
-                    int maxX = Math.Max(_selectionStart.X, _mouseOver.X);
-
-                    int minY = Math.Min(_selectionStart.Y, _mouseOver.Y);
-                    int maxY = Math.Max(_selectionStart.Y, _mouseOver.Y);
-
-                    for (int x = minX; x <= maxX; x++)
-                    {
-                        for (int y = minY; y <= maxY; y++)
-                        {
-                            MapCell cell = _map[x, y];
-                            _map[x, y].IsSelected = cell.IsPenetrable && isSelecting;
-                        }
-                    }
-
-                    _selectionStart = null;
-                }
-                else if (_mouseOver != null)
-                {
-                    _mouseOver.IsSelected = _mouseOver.IsPenetrable;
-                }
-
                 foreach (Menu menu in _menus)
                 {
                     if (mouseButtonEventArgs.X > menu.Position.X
@@ -168,6 +144,7 @@ namespace DK2D
                             }
 
                             _activeButton = button;
+                            _selectionStart = null;
                         }
 
                         return;
@@ -179,21 +156,51 @@ namespace DK2D
                     _activeButton.CellClicked(_mouseOver);
                     return;
                 }
-                
-                if (_mouseOver.Terrain is ClaimedPath)
+                else
                 {
-                    Vector2f coords = _window.MapPixelToCoords(new Vector2i(mouseButtonEventArgs.X, mouseButtonEventArgs.Y));
-
-                    if (_gameObjects.Count == 0)
+                    // Apply selection
+                    if (_selectionStart != null && _mouseOver != null)
                     {
-                        _gameObjects.Add(new Imp { Position = coords });
+                        bool isSelecting = !_selectionStart.IsSelected;
+
+                        int minX = Math.Min(_selectionStart.X, _mouseOver.X);
+                        int maxX = Math.Max(_selectionStart.X, _mouseOver.X);
+
+                        int minY = Math.Min(_selectionStart.Y, _mouseOver.Y);
+                        int maxY = Math.Max(_selectionStart.Y, _mouseOver.Y);
+
+                        for (int x = minX; x <= maxX; x++)
+                        {
+                            for (int y = minY; y <= maxY; y++)
+                            {
+                                MapCell cell = _map[x, y];
+                                _map[x, y].IsSelected = cell.IsPenetrable && isSelecting;
+                            }
+                        }
+
+                        _selectionStart = null;
                     }
-                    else
+                    else if (_mouseOver != null)
                     {
-                        Imp imp = _gameObjects.OfType<Imp>().Single();
-                        Vector2i cellIndex = _map.MapCoordsToCellIndex(coords);
+                        _mouseOver.IsSelected = _mouseOver.IsPenetrable;
+                    }
 
-                        imp.MoveTo(cellIndex, this);
+                    if (_mouseOver.Terrain is ClaimedPath)
+                    {
+                        Vector2f coords =
+                            _window.MapPixelToCoords(new Vector2i(mouseButtonEventArgs.X, mouseButtonEventArgs.Y));
+
+                        if (_gameObjects.Count == 0)
+                        {
+                            _gameObjects.Add(new Imp { Position = coords });
+                        }
+                        else
+                        {
+                            Imp imp = _gameObjects.OfType<Imp>().Single();
+                            Vector2i cellIndex = _map.MapCoordsToCellIndex(coords);
+
+                            imp.MoveTo(cellIndex, this);
+                        }
                     }
                 }
             }
@@ -231,6 +238,8 @@ namespace DK2D
             {
                 _display.DrawSelectionPreview(_map, _selectionStart, _mouseOver);
             }
+
+            Console.WriteLine("Over: {0}, Start: {1}", _mouseOver, _selectionStart);
 
             // Draw game objects
             _display.DrawObjects(_gameObjects);
