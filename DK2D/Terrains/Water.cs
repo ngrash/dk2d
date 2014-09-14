@@ -5,6 +5,7 @@ namespace DK2D.Terrains
         public Water()
         {
             Color = Colors.TerrainWater;
+            Texture = Textures.TerrainWater;
         }
     }
 }

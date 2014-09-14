@@ -44,13 +44,24 @@ namespace DK2D
             {
                 for (int y = 0; y < map.Height; y++)
                 {
+                    var position = new Vector2f(x * _cellSize.X, y * _cellSize.Y);
+                    var size = new Vector2f(_cellSize.X, _cellSize.Y); 
+
                     MapCell cell = map[x, y];
-                    _target.Draw(new RectangleShape
+
+                    if (cell.Terrain != null)
                     {
-                        Position = new Vector2f(x * _cellSize.X, y * _cellSize.Y),
-                        Size = new Vector2f(_cellSize.X, _cellSize.Y),
-                        FillColor = cell.Terrain.Color
-                    });
+                        if (cell.Terrain.Texture != null)
+                        {
+                            _target.Draw(new Sprite(cell.Terrain.Texture) { Position = position });
+                        }
+                        else
+                        {
+                            _target.Draw(
+                                new RectangleShape { Position = position, Size = size, FillColor = cell.Terrain.Color });
+                        }
+                    }
+                    
 
                     if (cell.IsSelected)
                     {

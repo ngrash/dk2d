@@ -1,30 +1,50 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+
 using SFML.Graphics;
 using SFML.Window;
 
 namespace DK2D
 {
-    static class Textures
+    internal static class Textures
     {
-        enum Size
+        private static readonly List<RenderTexture> RenderTextures = new List<RenderTexture>();
+        private static readonly List<Texture> AssetTextures = new List<Texture>();
+
+        public static readonly Texture Imp = TextureFrom(new CircleShape {FillColor = Colors.CreatureImp, Radius = 5}, Size.Widget);
+
+        public static readonly Texture TerrainWater = TextureFrom("Terrain/Water");
+
+        private enum Size
         {
             Room,
             Widget
         }
 
-        private static readonly List<RenderTexture> RenderTextures = new List<RenderTexture>();
-
-        public static readonly Texture Imp = TextureFrom(new CircleShape {FillColor = Colors.CreatureImp, Radius = 5}, Size.Widget);
-
         public static void Release()
         {
+            foreach (Texture texture in AssetTextures)
+            {
+                texture.Dispose();
+            }
+
+            AssetTextures.Clear();
+
             foreach (RenderTexture renderTexture in RenderTextures)
             {
                 renderTexture.Dispose();
             }
 
             RenderTextures.Clear();
+        }
+
+        private static Texture TextureFrom(string asset)
+        {
+            string filePath = Path.Combine("Assets", asset) + ".png";
+            var texture = new Texture(filePath);
+            AssetTextures.Add(texture);
+            return texture;
         }
 
         private static Texture TextureFrom(Shape shape, Size size)
