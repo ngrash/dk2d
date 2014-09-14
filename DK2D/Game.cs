@@ -234,17 +234,7 @@ namespace DK2D
                         Vector2f coords =
                             _window.MapPixelToCoords(new Vector2i(mouseButtonEventArgs.X, mouseButtonEventArgs.Y));
 
-                        if (_gameObjects.Count == 0)
-                        {
-                            _gameObjects.Add(new Imp(this) { Position = coords });
-                        }
-                        else
-                        {
-                            Imp imp = _gameObjects.OfType<Imp>().Single();
-                            Vector2i cellIndex = _map.MapCoordsToCellIndex(coords);
-
-                            imp.MoveTo(cellIndex);
-                        }
+                        _gameObjects.Add(new Imp(this) { Position = coords });
                     }
                 }
             }
@@ -268,13 +258,16 @@ namespace DK2D
 
             // Update selected object, this cannot happen in the mouse move event, because we need to consider moving objects
             _mouseOverObject = null;
-            foreach (GameObject gameObject in _mouseOver.Objects)
+            if (_mouseOver != null)
             {
-                float distance = gameObject.Position.DistanceTo(_mouseCoords);
-                if (distance < gameObject.BoundingRadius)
+                foreach (GameObject gameObject in _mouseOver.Objects)
                 {
-                    _mouseOverObject = gameObject;
-                    break;
+                    float distance = gameObject.Position.DistanceTo(_mouseCoords);
+                    if (distance < gameObject.BoundingRadius)
+                    {
+                        _mouseOverObject = gameObject;
+                        break;
+                    }
                 }
             }
         }

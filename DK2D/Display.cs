@@ -111,7 +111,7 @@ namespace DK2D
         {
             foreach (Imp imp in imps)
             {
-                DrawImpDebugInfo(imp);
+                //DrawImpDebugInfo(imp);
             }
         }
 

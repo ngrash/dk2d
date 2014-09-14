@@ -37,7 +37,11 @@ namespace DK2D.Objects
                     }
                     
                     _cell = value;
-                    _cell.Objects.Add(this);
+
+                    if (_cell != null)
+                    {
+                        _cell.Objects.Add(this);
+                    }
                 }
             }
         }

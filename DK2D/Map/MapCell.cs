@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 
+using DK2D.Actions;
 using DK2D.Objects;
 using DK2D.Rooms;
 using DK2D.Terrains;
@@ -18,9 +19,13 @@ namespace DK2D.Map
             Y = y;
             Position = new Vector2i(X, Y);
             Objects = new List<GameObject>();
+            Actions = new List<GameAction>();
+            IsDebugHighlightingEnabled = false;
         }
 
-        public List<GameObject> Objects { get; set; }
+        public List<GameObject> Objects { get; private set; }
+
+        public List<GameAction> Actions { get; private set; }
 
         public Map Map { get; private set; }
 

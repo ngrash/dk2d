@@ -42,6 +42,8 @@ namespace DK2D.Objects.Creatures
                 _currentAction.Perform(secondsElapsed);
                 if (_currentAction.IsDone)
                 {
+                    _currentAction.Cell = null;
+                    _currentAction.Creature = null;
                     _currentAction = null;
                 }
             }
@@ -64,6 +66,7 @@ namespace DK2D.Objects.Creatures
                                .FirstOrDefault();
             if (nearestAction != null)
             {
+                nearestAction.Creature = this;
                 _currentAction = nearestAction;
 
                 nearestAction.Cell.Highlight(Colors.OverlayRed);
@@ -129,7 +132,7 @@ namespace DK2D.Objects.Creatures
                 {
                     selectedAdjacent.Highlight(Colors.OverlayGreen);
 
-                    yield return new Dig { Cell = cell, Target = selectedAdjacent, Creature = this };
+                    yield return new Dig { Cell = cell, Target = selectedAdjacent };
                 }
             }
             else
@@ -139,15 +142,22 @@ namespace DK2D.Objects.Creatures
                 {
                     if (cell.Terrain is DirtPath)
                     {
-                        cell.Highlight(Colors.OverlayGreen);
-
-                        var possibleAction = new ClaimPath
+                        ClaimPath existingJob = cell.Actions.OfType<ClaimPath>().SingleOrDefault();
+                        if (existingJob == null)
                         {
-                            Creature = this,
-                            Cell = cell
-                        };
+                            cell.Highlight(Colors.OverlayGreen);
 
-                        yield return possibleAction;
+                            var possibleAction = new ClaimPath { Cell = cell };
+
+                            yield return possibleAction;
+                        }
+                        else
+                        {
+                            if (!existingJob.IsDone && existingJob.Creature == null)
+                            {
+                                yield return existingJob;
+                            }
+                        }
                     }
                 }
             }
