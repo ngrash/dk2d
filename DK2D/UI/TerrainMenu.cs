@@ -11,6 +11,7 @@ namespace DK2D.UI
             Add(new Earth());
             Add(new DirtPath());
             Add(new ClaimedPath());
+            Add(new GoldSeam());
         }
 
         private void Add(Terrain terrain)

@@ -17,6 +17,7 @@ namespace DK2D
         public static readonly Color DebugScanRadius = ColorFrom(DrawingColor.Firebrick);
 
         public static readonly Color TerrainEarth = ColorFrom(DrawingColor.SaddleBrown);
+        public static readonly Color TerrainGold = ColorFrom(DrawingColor.Gold);
         public static readonly Color TerrainDirtPath = ColorFrom(DrawingColor.RosyBrown);
         public static readonly Color TerrainClaimedPath = ColorFrom(DrawingColor.LightGray);
 
