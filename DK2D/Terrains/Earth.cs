@@ -5,6 +5,7 @@ namespace DK2D.Terrains
         public Earth()
         {
             Color = Colors.TerrainEarth;
+            Texture = Textures.TerrainEarth;
         }
     }
 }

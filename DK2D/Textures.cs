@@ -18,6 +18,10 @@ namespace DK2D
 
         public static readonly Texture TerrainDirtPath = TextureFrom("Terrain/DirtPath");
 
+        public static readonly Texture TerrainEarth = TextureFrom("Terrain/Earth");
+
+        public static readonly Texture TerrainClaimedPath = TextureFrom("Terrain/ClaimedPath");
+
         private enum Size
         {
             Room,
