@@ -128,6 +128,9 @@
     <Folder Include="Objects\Widgets\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\Terrain\dirtpath.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Assets\Terrain\water.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

@@ -5,6 +5,7 @@ namespace DK2D.Terrains
         public DirtPath()
         {
             Color = Colors.TerrainDirtPath;
+            Texture = Textures.TerrainDirtPath;
         }
     }
 }
