@@ -44,8 +44,12 @@ namespace DK2D
 
         private Button _activeButton;
 
+        private Vector2f _mouseCoords;
+
         private MapCell _selectionStart;
         private MapCell _mouseOver;
+
+        private GameObject _mouseOverObject;
 
         public Game()
         {
@@ -137,7 +141,8 @@ namespace DK2D
 
         private void WindowOnMouseMoved(object sender, MouseMoveEventArgs mouseMoveEventArgs)
         {
-            _mouseOver = _map.MapCoordsToCell(new Vector2f(mouseMoveEventArgs.X, mouseMoveEventArgs.Y));
+            _mouseCoords = _window.MapPixelToCoords(new Vector2i(mouseMoveEventArgs.X, mouseMoveEventArgs.Y));
+            _mouseOver = _map.MapCoordsToCell(_mouseCoords);
         }
 
         private void WindowOnMouseButtonPressed(object sender, MouseButtonEventArgs mouseButtonEventArgs)
@@ -260,6 +265,18 @@ namespace DK2D
                     cell.Update(secondsElapsed);
                 }
             }
+
+            // Update selected object, this cannot happen in the mouse move event, because we need to consider moving objects
+            _mouseOverObject = null;
+            foreach (GameObject gameObject in _mouseOver.Objects)
+            {
+                float distance = gameObject.Position.DistanceTo(_mouseCoords);
+                if (distance < gameObject.BoundingRadius)
+                {
+                    _mouseOverObject = gameObject;
+                    break;
+                }
+            }
         }
 
         private void Draw(RenderTarget target)
@@ -286,6 +303,18 @@ namespace DK2D
 
             // Draw menu
             _display.DrawMenus(_menus);
+
+            // Draw bounding circle around object the mouse is over
+            if (_mouseOverObject != null)
+            {
+                target.Draw(new CircleShape(_mouseOverObject.BoundingRadius)
+                    {
+                        Position = _mouseOverObject.Position - new Vector2f(_mouseOverObject.BoundingRadius, _mouseOverObject.BoundingRadius),
+                        FillColor = Color.Transparent,
+                        OutlineColor = Color.Red,
+                        OutlineThickness = 1
+                    });
+            }
 
             // Draw information about the current hoovered cell
             if (_mouseOver != null)

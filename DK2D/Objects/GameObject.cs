@@ -17,6 +17,8 @@ namespace DK2D.Objects
             Game = game;
         }
 
+        public float BoundingRadius { get; protected set; }
+
         public MapCell Cell
         {
             get
@@ -55,7 +57,7 @@ namespace DK2D.Objects
             }
         }
 
-        public Sprite Sprite { get; protected set; }
+        public Color Color { get; protected set; }
 
         protected Game Game { get; private set; }
 

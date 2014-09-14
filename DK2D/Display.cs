@@ -99,8 +99,11 @@ namespace DK2D
         {
             foreach (GameObject gameObject in objects)
             {
-                gameObject.Sprite.Position = gameObject.Position;
-                _target.Draw(gameObject.Sprite);
+                _target.Draw(new CircleShape(gameObject.BoundingRadius)
+                    {
+                        FillColor = gameObject.Color,
+                        Position = gameObject.Position - new Vector2f(gameObject.BoundingRadius, gameObject.BoundingRadius)
+                    });
             }
         }
 

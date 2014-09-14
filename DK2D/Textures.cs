@@ -12,8 +12,6 @@ namespace DK2D
         private static readonly List<RenderTexture> RenderTextures = new List<RenderTexture>();
         private static readonly List<Texture> AssetTextures = new List<Texture>();
 
-        public static readonly Texture Imp = TextureFrom(new CircleShape {FillColor = Colors.CreatureImp, Radius = 5}, Size.Widget);
-
         public static readonly Texture TerrainWater = TextureFrom("Terrain/Water");
 
         public static readonly Texture TerrainDirtPath = TextureFrom("Terrain/DirtPath");

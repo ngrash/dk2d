@@ -17,6 +17,16 @@ namespace DK2D
         {
             return baseVector.X * vector.X + baseVector.Y * vector.Y;
         }
+
+        public static float DistanceTo(this Vector2f baseVector, Vector2f vector)
+        {
+            float x1 = baseVector.X;
+            float y1 = baseVector.Y;
+            float x2 = vector.X;
+            float y2 = vector.Y;
+
+            return (float)Math.Sqrt(Math.Pow(Math.Abs(x1 - x2), 2) + Math.Pow(Math.Abs(y1 - y2), 2));
+        }
     }
 
     static class Vector2iExtensions

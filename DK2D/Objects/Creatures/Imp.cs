@@ -5,7 +5,7 @@ using System.Linq;
 using DK2D.Actions;
 using DK2D.Map;
 using DK2D.Terrains;
-using SFML.Graphics;
+
 using SFML.Window;
 
 namespace DK2D.Objects.Creatures
@@ -21,7 +21,8 @@ namespace DK2D.Objects.Creatures
         public Imp(Game game)
             : base(game)
         {
-            Sprite = new Sprite(Textures.Imp);
+            Color = Colors.CreatureImp;
+            BoundingRadius = 5;
         }
 
         public override void Update(float secondsElapsed)
