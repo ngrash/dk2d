@@ -36,7 +36,7 @@ namespace DK2D.UI
             Buttons.Add(button);
 
             // Resize menu
-            Size = new Vector2f(button.Position.X + button.Size.X + 9 , button.Size.Y + 9 + 9);
+            Size = new Vector2f(button.Position.X + button.Size.X + 9, button.Size.Y + 9 + 9);
         }
     }
 }
