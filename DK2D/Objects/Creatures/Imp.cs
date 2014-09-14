@@ -17,7 +17,7 @@ namespace DK2D.Objects.Creatures
 
         public const int ScanRadius = 5;
 
-        private const float Speed = 40;
+        private const float Speed = 80;
 
         private readonly List<Vector2f> _path = new List<Vector2f>();
 
