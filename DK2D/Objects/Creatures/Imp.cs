@@ -12,8 +12,6 @@ namespace DK2D.Objects.Creatures
 {
     internal class Imp : Creature
     {
-        private const bool EnableDebugHighlight = false;
-
         public const int ScanRadius = 5;
 
         private const float Speed = 80;
@@ -67,10 +65,7 @@ namespace DK2D.Objects.Creatures
             {
                 _currentAction = nearestAction;
 
-                if (EnableDebugHighlight)
-                {
-                    nearestAction.Cell.Highlight(Colors.OverlayRed);
-                }
+                nearestAction.Cell.Highlight(Colors.OverlayRed);
 
                 MoveTo(nearestAction.Cell.Position);
             }
@@ -131,10 +126,7 @@ namespace DK2D.Objects.Creatures
             {
                 foreach (MapCell selectedAdjacent in cell.Adjacents().Where(adjacent => adjacent.IsSelected && adjacent.IsPenetrable))
                 {
-                    if (EnableDebugHighlight)
-                    {
-                        selectedAdjacent.Highlight(Colors.OverlayGreen);
-                    }
+                    selectedAdjacent.Highlight(Colors.OverlayGreen);
 
                     yield return new Dig { Cell = cell, Target = selectedAdjacent, Creature = this };
                 }
@@ -146,10 +138,7 @@ namespace DK2D.Objects.Creatures
                 {
                     if (cell.Terrain is DirtPath)
                     {
-                        if (EnableDebugHighlight)
-                        {
-                            cell.Highlight(Colors.OverlayGreen);
-                        }
+                        cell.Highlight(Colors.OverlayGreen);
 
                         var possibleAction = new ClaimPath
                         {

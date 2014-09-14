@@ -44,6 +44,8 @@ namespace DK2D.Map
 
         public bool IsSelected { get; set; }
 
+        public bool IsDebugHighlightingEnabled { get; set; }
+
         public bool IsClaimed
         {
             get
@@ -70,10 +72,13 @@ namespace DK2D.Map
 
         public void Highlight(Color color)
         {
-            OverlayColor = color;
-            OverlayFade = 0;
-            OverlayFadeDuration = 1;
-            IsOverlayFadeEnabled = true;
+            if (IsDebugHighlightingEnabled)
+            {
+                OverlayColor = color;
+                OverlayFade = 0;
+                OverlayFadeDuration = 1;
+                IsOverlayFadeEnabled = true;
+            }
         }
 
         public void Update(float secondsElapsed)
