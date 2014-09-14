@@ -239,8 +239,6 @@ namespace DK2D
                 _display.DrawSelectionPreview(_map, _selectionStart, _mouseOver);
             }
 
-            Console.WriteLine("Over: {0}, Start: {1}", _mouseOver, _selectionStart);
-
             // Draw game objects
             _display.DrawObjects(_gameObjects);
 
