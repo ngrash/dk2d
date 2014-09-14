@@ -54,6 +54,14 @@ namespace DK2D.Map
             }
         }
 
+        public bool IsPassable
+        {
+            get
+            {
+                return Terrain is DirtPath || Terrain is ClaimedPath;
+            }
+        }
+
         public void Highlight(Color color)
         {
             OverlayColor = color;

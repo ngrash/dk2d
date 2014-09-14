@@ -67,7 +67,7 @@ namespace DK2D.Objects.Creatures
             Vector2i currentCellIndex = game.Map.MapCoordsToCellIndex(Position);
             MapCell currentCell = game.Map.Get(currentCellIndex);
 
-            var star = new AStar(i => !(game.Map.Get(i).Terrain is Earth), i => game.Map.Get(i).Adjacents().Select(cell => cell.Position));
+            var star = new AStar(i => game.Map.Get(i).IsPassable, i => game.Map.Get(i).Adjacents().Select(cell => cell.Position));
             List<Vector2i> path = star.FindPath(currentCell.Position, cellIndex);
 
             // We already stand on the first cell
