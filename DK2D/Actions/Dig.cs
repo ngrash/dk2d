@@ -1,10 +1,9 @@
 ﻿using DK2D.Map;
-using DK2D.Objects.Creatures;
 using DK2D.Terrains;
 
 namespace DK2D.Actions
 {
-    class Dig : LaborGameAction
+    internal class Dig : LaborGameAction
     {
         public Dig()
         {
@@ -13,12 +12,12 @@ namespace DK2D.Actions
 
         public MapCell Target { get; set; }
 
-        protected override void Completed(Imp imp)
+        protected override void Completed()
         {
             Target.Terrain = new DirtPath();
             Target.IsSelected = false;
 
-            imp.MoveTo(Target.Position);
+            Creature.MoveTo(Target.Position);
         }
     }
 }

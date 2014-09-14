@@ -9,7 +9,7 @@ namespace DK2D.Actions
             Duration = 0.5f;
         }
 
-        protected override void Completed(Objects.Creatures.Imp imp)
+        protected override void Completed()
         {
             Cell.Terrain = new ClaimedPath();
         }

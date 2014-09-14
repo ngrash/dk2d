@@ -6,7 +6,7 @@
 
         public float PercentCompleted { get; private set; }
 
-        public override void Perform(float secondsElapsed, Objects.Creatures.Imp imp)
+        public override void Perform(float secondsElapsed)
         {
             PercentCompleted += (100 / Duration) * secondsElapsed;
 
@@ -14,10 +14,10 @@
             {
                 IsDone = true;
 
-                Completed(imp);
+                Completed();
             }
         }
 
-        protected abstract void Completed(Objects.Creatures.Imp imp);
+        protected abstract void Completed();
     }
 }
