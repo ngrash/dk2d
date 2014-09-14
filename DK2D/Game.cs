@@ -12,6 +12,10 @@ using DK2D.UI;
 using SFML.Graphics;
 using SFML.Window;
 
+using DialogResult = System.Windows.Forms.DialogResult;
+using OpenFileDialog = System.Windows.Forms.OpenFileDialog;
+using SaveFileDialog = System.Windows.Forms.SaveFileDialog;
+
 namespace DK2D
 {
     internal class Game
@@ -27,7 +31,6 @@ namespace DK2D
 
         private readonly RenderWindow _window;
         private readonly Display _display;
-        private readonly Map.Map _map;
 
         private readonly List<GameObject> _gameObjects = new List<GameObject>();
 
@@ -35,6 +38,8 @@ namespace DK2D
             {
                 new TerrainMenu { Position = new Vector2f(10, WindowHeight - 60) }
             };
+
+        private Map.Map _map;
 
         private Button _activeButton;
 
@@ -48,6 +53,7 @@ namespace DK2D
             _window.MouseButtonReleased += WindowOnMouseButtonReleased;
             _window.MouseButtonPressed += WindowOnMouseButtonPressed;
             _window.MouseMoved += WindowOnMouseMoved;
+            _window.KeyPressed += WindowOnKeyPressed;
 
             _display = new Display(_window, new Vector2i(CellWidth, CellHeight));
 
@@ -94,6 +100,38 @@ namespace DK2D
             Textures.Release();
 
             _window.Close();
+        }
+
+        private void WindowOnKeyPressed(object sender, KeyEventArgs keyEventArgs)
+        {
+            if (keyEventArgs.Control && keyEventArgs.Code == Keyboard.Key.O)
+            {
+                using (var openFileDialog = new OpenFileDialog())
+                {
+                    openFileDialog.Filter = "DK2D Map (*.map)|*.map";
+                    if (openFileDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        _gameObjects.Clear();
+                        _selectionStart = null;
+                        _activeButton = null;
+
+                        string file = openFileDialog.FileName;
+                        _map = MapFile.Load(file);
+                    }
+                }
+            }
+            else if (keyEventArgs.Control && keyEventArgs.Code == Keyboard.Key.S)
+            {
+                using (var saveFileDialog = new SaveFileDialog())
+                {
+                    saveFileDialog.Filter = "DK2D Map (*.map)|*.map";
+                    if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        string file = saveFileDialog.FileName;
+                        MapFile.Save(_map, file);
+                    }
+                }
+            }
         }
 
         private void WindowOnMouseMoved(object sender, MouseMoveEventArgs mouseMoveEventArgs)
