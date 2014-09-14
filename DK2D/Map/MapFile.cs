@@ -16,7 +16,8 @@ namespace DK2D.Map
                 { 0, typeof(Earth) },
                 { 1, typeof(DirtPath) },
                 { 2, typeof(ClaimedPath) },
-                { 3, typeof(GoldSeam) }
+                { 3, typeof(GoldSeam) },
+                { 4, typeof(Water) }
             };
 
         private MapFile()

@@ -20,6 +20,7 @@ namespace DK2D
         public static readonly Color TerrainGold = ColorFrom(DrawingColor.Gold);
         public static readonly Color TerrainDirtPath = ColorFrom(DrawingColor.RosyBrown);
         public static readonly Color TerrainClaimedPath = ColorFrom(DrawingColor.LightGray);
+        public static readonly Color TerrainWater = ColorFrom(DrawingColor.SteelBlue);
 
         public static readonly Color CreatureImp = ColorFrom(DrawingColor.Brown);
 
