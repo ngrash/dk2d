@@ -230,14 +230,14 @@ namespace DK2D
 
                         if (_gameObjects.Count == 0)
                         {
-                            _gameObjects.Add(new Imp { Position = coords });
+                            _gameObjects.Add(new Imp(this) { Position = coords });
                         }
                         else
                         {
                             Imp imp = _gameObjects.OfType<Imp>().Single();
                             Vector2i cellIndex = _map.MapCoordsToCellIndex(coords);
 
-                            imp.MoveTo(cellIndex, this);
+                            imp.MoveTo(cellIndex);
                         }
                     }
                 }
@@ -248,7 +248,7 @@ namespace DK2D
         {
             foreach (GameObject gameObject in _gameObjects)
             {
-                gameObject.Update(secondsElapsed, this);
+                gameObject.Update(secondsElapsed);
             }
 
             for (int x = 0; x < _map.Width; x++)

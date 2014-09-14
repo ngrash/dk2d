@@ -1,5 +1,4 @@
-﻿using DK2D.Map;
-using DK2D.Terrains;
+﻿using DK2D.Terrains;
 
 namespace DK2D.Actions
 {
@@ -10,10 +9,9 @@ namespace DK2D.Actions
             Duration = 0.5f;
         }
 
-        protected override void Completed(Objects.Creatures.Imp imp, Game game)
+        protected override void Completed(Objects.Creatures.Imp imp)
         {
-            MapCell cell = game.Map.MapCoordsToCell(imp.Position);
-            cell.Terrain = new ClaimedPath();
+            Cell.Terrain = new ClaimedPath();
         }
     }
 }

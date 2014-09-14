@@ -1,6 +1,10 @@
 ﻿namespace DK2D.Objects.Creatures
 {
-    class Skeleton : Creature
+    internal class Skeleton : Creature
     {
+        public Skeleton(Game game)
+            : base(game)
+        {
+        }
     }
 }

@@ -13,12 +13,12 @@ namespace DK2D.Actions
 
         public MapCell Target { get; set; }
 
-        protected override void Completed(Imp imp, Game game)
+        protected override void Completed(Imp imp)
         {
             Target.Terrain = new DirtPath();
             Target.IsSelected = false;
 
-            imp.MoveTo(Target.Position, game);
+            imp.MoveTo(Target.Position);
         }
     }
 }

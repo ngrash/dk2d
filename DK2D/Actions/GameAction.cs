@@ -1,8 +1,6 @@
 ﻿using DK2D.Map;
 using DK2D.Objects.Creatures;
 
-using SFML.Window;
-
 namespace DK2D.Actions
 {
     class GameAction
@@ -11,7 +9,7 @@ namespace DK2D.Actions
 
         public bool IsDone { get; set; }
 
-        public virtual void Perform(float secondsElapsed, Imp imp, Game game)
+        public virtual void Perform(float secondsElapsed, Imp imp)
         {
             IsDone = true;
         }

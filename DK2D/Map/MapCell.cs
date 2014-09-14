@@ -1,4 +1,7 @@
-﻿using DK2D.Rooms;
+﻿using System.Collections.Generic;
+
+using DK2D.Objects;
+using DK2D.Rooms;
 using DK2D.Terrains;
 
 using SFML.Graphics;
@@ -14,7 +17,10 @@ namespace DK2D.Map
             X = x;
             Y = y;
             Position = new Vector2i(X, Y);
+            Objects = new List<GameObject>();
         }
+
+        public List<GameObject> Objects { get; set; }
 
         public Map Map { get; private set; }
 

@@ -1,6 +1,10 @@
 ﻿namespace DK2D.Objects.Creatures
 {
-    class Troll : Creature
+    internal class Troll : Creature
     {
+        public Troll(Game game)
+            : base(game)
+        {
+        }
     }
 }

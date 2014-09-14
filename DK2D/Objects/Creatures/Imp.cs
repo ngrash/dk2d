@@ -23,7 +23,8 @@ namespace DK2D.Objects.Creatures
 
         private GameAction _currentAction;
 
-        public Imp()
+        public Imp(Game game)
+            : base(game)
         {
             Sprite = new Sprite(Textures.Imp);
         }
@@ -36,7 +37,7 @@ namespace DK2D.Objects.Creatures
             }
         }
 
-        public override void Update(float secondsElapsed, Game game)
+        public override void Update(float secondsElapsed)
         {
             bool isAtDestination = _path.Count == 0;
             if (!isAtDestination)
@@ -50,7 +51,7 @@ namespace DK2D.Objects.Creatures
             }
             else if (_currentAction != null)
             {
-                _currentAction.Perform(secondsElapsed, this, game);
+                _currentAction.Perform(secondsElapsed, this);
                 if (_currentAction.IsDone)
                 {
                     _currentAction = null;
@@ -58,16 +59,16 @@ namespace DK2D.Objects.Creatures
             }
             else
             {
-                FindSomethingToDo(game);
+                FindSomethingToDo();
             }
         }
 
-        public void MoveTo(Vector2i cellIndex, Game game)
+        public void MoveTo(Vector2i cellIndex)
         {
-            Vector2i currentCellIndex = game.Map.MapCoordsToCellIndex(Position);
-            MapCell currentCell = game.Map.Get(currentCellIndex);
+            Vector2i currentCellIndex = Game.Map.MapCoordsToCellIndex(Position);
+            MapCell currentCell = Game.Map.Get(currentCellIndex);
 
-            var star = new AStar(i => game.Map.Get(i).IsPassable, i => game.Map.Get(i).Adjacents().Select(cell => cell.Position));
+            var star = new AStar(i => Game.Map.Get(i).IsPassable, i => Game.Map.Get(i).Adjacents().Select(cell => cell.Position));
             List<Vector2i> path = star.FindPath(currentCell.Position, cellIndex);
 
             // We already stand on the first cell
@@ -76,17 +77,17 @@ namespace DK2D.Objects.Creatures
             Path.Clear();
             foreach (Vector2i cell in path)
             {
-                Vector2f coords = game.Map.MapCellIndexToCenterCoords(cell);
+                Vector2f coords = Game.Map.MapCellIndexToCenterCoords(cell);
                 Path.Add(coords);
             }
         }
 
-        private void FindSomethingToDo(Game game)
+        private void FindSomethingToDo()
         {
-            Vector2i cellIndex = game.Map.MapCoordsToCellIndex(Position);
-            MapCell currentCell = game.Map.Get(cellIndex);
+            Vector2i cellIndex = Game.Map.MapCoordsToCellIndex(Position);
+            MapCell currentCell = Game.Map.Get(cellIndex);
 
-            IEnumerable<GameAction> possibleActions = ScanEnvironment(cellIndex, game.Map);
+            IEnumerable<GameAction> possibleActions = ScanEnvironment(cellIndex, Game.Map);
 
             GameAction nearestAction =
                 possibleActions.OrderBy(action => action.Cell.DistanceTo(currentCell))
@@ -101,7 +102,7 @@ namespace DK2D.Objects.Creatures
                     nearestAction.Cell.Highlight(Colors.OverlayRed);
                 }
 
-                MoveTo(nearestAction.Cell.Position, game);
+                MoveTo(nearestAction.Cell.Position);
             }
         }
 

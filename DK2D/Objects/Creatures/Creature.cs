@@ -2,5 +2,9 @@
 {
     class Creature : GameObject
     {
+        public Creature(Game game)
+            : base(game)
+        {
+        }
     }
 }

@@ -1,6 +1,10 @@
 ﻿namespace DK2D.Objects.Creatures
 {
-    class Warlock : Creature
+    internal class Warlock : Creature
     {
+        public Warlock(Game game)
+            : base(game)
+        {
+        }
     }
 }
