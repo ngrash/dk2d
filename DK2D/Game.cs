@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 
 using DK2D.Map;
 using DK2D.Objects;
@@ -285,6 +286,22 @@ namespace DK2D
 
             // Draw menu
             _display.DrawMenus(_menus);
+
+            // Draw information about the current hoovered cell
+            if (_mouseOver != null)
+            {
+                var info = new StringBuilder();
+                info.Append(_mouseOver.Terrain.GetType().Name);
+                
+                if (_mouseOver.Objects.Count > 0)
+                {
+                    info.Append(": ");
+                    string objects = string.Join(", ", _mouseOver.Objects.Select(o => o.GetType().Name));
+                    info.Append(objects);
+                }
+
+                target.Draw(new Text(info.ToString(), new Font("Assets/Font/PureEvil.ttf")) { Position = new Vector2f(10, 10), Color = Color.Black });
+            }
         }
     }
 }
