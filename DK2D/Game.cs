@@ -34,6 +34,7 @@ namespace DK2D
         private readonly Display _display;
 
         private readonly List<GameObject> _gameObjects = new List<GameObject>();
+        private readonly List<GameObject> _hand = new List<GameObject>();
 
         private readonly List<Menu> _menus = new List<Menu>
             {
@@ -152,6 +153,24 @@ namespace DK2D
                 if (_activeButton == null)
                 {
                     _selectionStart = _map.MapCoordsToCell(new Vector2f(mouseButtonEventArgs.X, mouseButtonEventArgs.Y));
+                }
+
+                if (_mouseOverObject is Creature)
+                {
+                    _gameObjects.Remove(_mouseOverObject);
+                    _hand.Add(_mouseOverObject);
+                }
+            }
+            else if (mouseButtonEventArgs.Button == Mouse.Button.Right)
+            {
+                if (_hand.Count > 0)
+                {
+                    var coords = _window.MapPixelToCoords(new Vector2i(mouseButtonEventArgs.X, mouseButtonEventArgs.Y));
+                    GameObject gameObject = _hand[0];
+                    _hand.Remove(gameObject);
+
+                    gameObject.Position = coords;
+                    _gameObjects.Add(gameObject);
                 }
             }
         }
