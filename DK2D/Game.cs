@@ -47,10 +47,9 @@ namespace DK2D
 
         private Vector2f _mouseCoords;
 
-        private MapCell _selectionStart;
-        private MapCell _mouseOver;
-
-        private GameObject _mouseOverObject;
+        private MapCell _cellSelectionStart;
+        private MapCell _cellUnderMouse;
+        private GameObject _objectUnderMouse;
 
         public Game()
         {
@@ -118,7 +117,7 @@ namespace DK2D
                     if (openFileDialog.ShowDialog() == DialogResult.OK)
                     {
                         _gameObjects.Clear();
-                        _selectionStart = null;
+                        _cellSelectionStart = null;
                         _activeButton = null;
 
                         string file = openFileDialog.FileName;
@@ -143,7 +142,7 @@ namespace DK2D
         private void WindowOnMouseMoved(object sender, MouseMoveEventArgs mouseMoveEventArgs)
         {
             _mouseCoords = _window.MapPixelToCoords(new Vector2i(mouseMoveEventArgs.X, mouseMoveEventArgs.Y));
-            _mouseOver = _map.MapCoordsToCell(_mouseCoords);
+            _cellUnderMouse = _map.MapCoordsToCell(_mouseCoords);
         }
 
         private void WindowOnMouseButtonPressed(object sender, MouseButtonEventArgs mouseButtonEventArgs)
@@ -152,24 +151,23 @@ namespace DK2D
             {
                 if (_activeButton == null)
                 {
-                    _selectionStart = _map.MapCoordsToCell(new Vector2f(mouseButtonEventArgs.X, mouseButtonEventArgs.Y));
+                    _cellSelectionStart = _map.MapCoordsToCell(_mouseCoords);
                 }
 
-                if (_mouseOverObject is Creature)
+                if (_objectUnderMouse is Creature)
                 {
-                    _gameObjects.Remove(_mouseOverObject);
-                    _hand.Add(_mouseOverObject);
+                    _gameObjects.Remove(_objectUnderMouse);
+                    _hand.Add(_objectUnderMouse);
                 }
             }
             else if (mouseButtonEventArgs.Button == Mouse.Button.Right)
             {
                 if (_hand.Count > 0)
                 {
-                    var coords = _window.MapPixelToCoords(new Vector2i(mouseButtonEventArgs.X, mouseButtonEventArgs.Y));
                     GameObject gameObject = _hand[0];
                     _hand.Remove(gameObject);
 
-                    gameObject.Position = coords;
+                    gameObject.Position = _mouseCoords;
                     _gameObjects.Add(gameObject);
                 }
             }
@@ -207,7 +205,7 @@ namespace DK2D
                             }
 
                             _activeButton = button;
-                            _selectionStart = null;
+                            _cellSelectionStart = null;
                         }
 
                         return;
@@ -216,21 +214,21 @@ namespace DK2D
 
                 if (_activeButton != null)
                 {
-                    _activeButton.CellClicked(_mouseOver);
+                    _activeButton.CellClicked(_cellUnderMouse);
                     return;
                 }
                 else
                 {
                     // Apply selection
-                    if (_selectionStart != null && _mouseOver != null)
+                    if (_cellSelectionStart != null && _cellUnderMouse != null)
                     {
-                        bool isSelecting = !_selectionStart.IsSelected;
+                        bool isSelecting = !_cellSelectionStart.IsSelected;
 
-                        int minX = Math.Min(_selectionStart.X, _mouseOver.X);
-                        int maxX = Math.Max(_selectionStart.X, _mouseOver.X);
+                        int minX = Math.Min(_cellSelectionStart.X, _cellUnderMouse.X);
+                        int maxX = Math.Max(_cellSelectionStart.X, _cellUnderMouse.X);
 
-                        int minY = Math.Min(_selectionStart.Y, _mouseOver.Y);
-                        int maxY = Math.Max(_selectionStart.Y, _mouseOver.Y);
+                        int minY = Math.Min(_cellSelectionStart.Y, _cellUnderMouse.Y);
+                        int maxY = Math.Max(_cellSelectionStart.Y, _cellUnderMouse.Y);
 
                         for (int x = minX; x <= maxX; x++)
                         {
@@ -241,19 +239,16 @@ namespace DK2D
                             }
                         }
 
-                        _selectionStart = null;
+                        _cellSelectionStart = null;
                     }
-                    else if (_mouseOver != null)
+                    else if (_cellUnderMouse != null)
                     {
-                        _mouseOver.IsSelected = _mouseOver.IsPenetrable;
+                        _cellUnderMouse.IsSelected = _cellUnderMouse.IsPenetrable;
                     }
 
-                    if (_mouseOver.Terrain is ClaimedPath)
+                    if (_cellUnderMouse.Terrain is ClaimedPath)
                     {
-                        Vector2f coords =
-                            _window.MapPixelToCoords(new Vector2i(mouseButtonEventArgs.X, mouseButtonEventArgs.Y));
-
-                        _gameObjects.Add(new Imp(this) { Position = coords });
+                        _gameObjects.Add(new Imp(this) { Position = _mouseCoords });
                     }
                 }
             }
@@ -276,15 +271,15 @@ namespace DK2D
             }
 
             // Update selected object, this cannot happen in the mouse move event, because we need to consider moving objects
-            _mouseOverObject = null;
-            if (_mouseOver != null)
+            _objectUnderMouse = null;
+            if (_cellUnderMouse != null)
             {
-                foreach (GameObject gameObject in _mouseOver.Objects)
+                foreach (GameObject gameObject in _cellUnderMouse.Objects)
                 {
                     float distance = gameObject.Position.DistanceTo(_mouseCoords);
                     if (distance < gameObject.BoundingRadius)
                     {
-                        _mouseOverObject = gameObject;
+                        _objectUnderMouse = gameObject;
                         break;
                     }
                 }
@@ -302,9 +297,9 @@ namespace DK2D
             _display.DrawCells(_map);
 
             // Draw selection preview
-            if (_mouseOver != null)
+            if (_cellUnderMouse != null)
             {
-                _display.DrawSelectionPreview(_map, _selectionStart, _mouseOver);
+                _display.DrawSelectionPreview(_map, _cellSelectionStart, _cellUnderMouse);
             }
 
             // Draw game objects
@@ -317,11 +312,11 @@ namespace DK2D
             _display.DrawMenus(_menus);
 
             // Draw bounding circle around object the mouse is over
-            if (_mouseOverObject != null)
+            if (_objectUnderMouse != null)
             {
-                target.Draw(new CircleShape(_mouseOverObject.BoundingRadius)
+                target.Draw(new CircleShape(_objectUnderMouse.BoundingRadius)
                     {
-                        Position = _mouseOverObject.Position - new Vector2f(_mouseOverObject.BoundingRadius, _mouseOverObject.BoundingRadius),
+                        Position = _objectUnderMouse.Position - new Vector2f(_objectUnderMouse.BoundingRadius, _objectUnderMouse.BoundingRadius),
                         FillColor = Color.Transparent,
                         OutlineColor = Color.Red,
                         OutlineThickness = 1
@@ -329,15 +324,15 @@ namespace DK2D
             }
 
             // Draw information about the current hoovered cell
-            if (_mouseOver != null)
+            if (_cellUnderMouse != null)
             {
                 var info = new StringBuilder();
-                info.Append(_mouseOver.Terrain.GetType().Name);
+                info.Append(_cellUnderMouse.Terrain.GetType().Name);
                 
-                if (_mouseOver.Objects.Count > 0)
+                if (_cellUnderMouse.Objects.Count > 0)
                 {
                     info.Append(": ");
-                    string objects = string.Join(", ", _mouseOver.Objects.Select(o => o.GetType().Name));
+                    string objects = string.Join(", ", _cellUnderMouse.Objects.Select(o => o.GetType().Name));
                     info.Append(objects);
                 }
 
