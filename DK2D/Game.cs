@@ -149,15 +149,14 @@ namespace DK2D
         {
             if (mouseButtonEventArgs.Button == Mouse.Button.Left)
             {
-                if (_activeButton == null)
-                {
-                    _cellSelectionStart = _map.MapCoordsToCell(_mouseCoords);
-                }
-
                 if (_objectUnderMouse is Creature)
                 {
                     _gameObjects.Remove(_objectUnderMouse);
                     _hand.Add(_objectUnderMouse);
+                }
+                else
+                {
+                    _cellSelectionStart = _map.MapCoordsToCell(_mouseCoords);
                 }
             }
             else if (mouseButtonEventArgs.Button == Mouse.Button.Right)
@@ -205,44 +204,39 @@ namespace DK2D
                     }
                 }
 
-                if (_activeButton != null)
+                // Apply selection
+                if (_cellUnderMouse != null)
                 {
-                    _activeButton.CellClicked(_cellUnderMouse);
-                    return;
-                }
-                else
-                {
-                    // Apply selection
-                    if (_cellSelectionStart != null && _cellUnderMouse != null)
+                    if (_cellSelectionStart == null)
                     {
-                        bool isSelecting = !_cellSelectionStart.IsSelected;
+                        _cellSelectionStart = _cellUnderMouse;
+                    }
 
-                        int minX = Math.Min(_cellSelectionStart.X, _cellUnderMouse.X);
-                        int maxX = Math.Max(_cellSelectionStart.X, _cellUnderMouse.X);
+                    bool isSelecting = !_cellSelectionStart.IsSelected;
 
-                        int minY = Math.Min(_cellSelectionStart.Y, _cellUnderMouse.Y);
-                        int maxY = Math.Max(_cellSelectionStart.Y, _cellUnderMouse.Y);
+                    int minX = Math.Min(_cellSelectionStart.X, _cellUnderMouse.X);
+                    int maxX = Math.Max(_cellSelectionStart.X, _cellUnderMouse.X);
 
-                        for (int x = minX; x <= maxX; x++)
+                    int minY = Math.Min(_cellSelectionStart.Y, _cellUnderMouse.Y);
+                    int maxY = Math.Max(_cellSelectionStart.Y, _cellUnderMouse.Y);
+
+                    for (int x = minX; x <= maxX; x++)
+                    {
+                        for (int y = minY; y <= maxY; y++)
                         {
-                            for (int y = minY; y <= maxY; y++)
+                            MapCell cell = _map[x, y];
+                            if (_activeButton == null)
                             {
-                                MapCell cell = _map[x, y];
-                                _map[x, y].IsSelected = cell.IsPenetrable && isSelecting;
+                                cell.IsSelected = cell.IsPenetrable && isSelecting;
+                            }
+                            else
+                            {
+                                _activeButton.CellClicked(cell);
                             }
                         }
-
-                        _cellSelectionStart = null;
-                    }
-                    else if (_cellUnderMouse != null)
-                    {
-                        _cellUnderMouse.IsSelected = _cellUnderMouse.IsPenetrable;
                     }
 
-                    if (_cellUnderMouse.Terrain is ClaimedPath)
-                    {
-                        _gameObjects.Add(new Imp(this) { Position = _mouseCoords });
-                    }
+                    _cellSelectionStart = null;
                 }
             }
         }
