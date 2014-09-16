@@ -188,25 +188,18 @@ namespace DK2D
             {
                 foreach (Menu menu in _menus)
                 {
-                    if (mouseButtonEventArgs.X > menu.Position.X
-                        && mouseButtonEventArgs.X < menu.Position.X + menu.Size.X
-                        && mouseButtonEventArgs.Y > menu.Position.Y
-                        && mouseButtonEventArgs.Y < menu.Position.Y + menu.Size.Y)
+                    Button clickedButton = menu.HitTest(new Vector2f(mouseButtonEventArgs.X, mouseButtonEventArgs.Y));
+                    if (clickedButton != null)
                     {
-                        Button button = menu.HitTest(new Vector2f(mouseButtonEventArgs.X, mouseButtonEventArgs.Y));
-
-                        if (button != null)
+                        if (_activeButton != null)
                         {
-                            button.IsActive = true;
-
-                            if (_activeButton != null)
-                            {
-                                _activeButton.IsActive = false;
-                            }
-
-                            _activeButton = button;
-                            _cellSelectionStart = null;
+                            _activeButton.IsActive = false;
                         }
+
+                        _activeButton = clickedButton;
+                        _activeButton.IsActive = true;
+
+                        _cellSelectionStart = null;
 
                         return;
                     }

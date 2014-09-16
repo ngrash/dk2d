@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 using SFML.Window;
 
@@ -14,20 +13,26 @@ namespace DK2D.UI
 
         public Vector2f Position { get; set; }
 
-        public Vector2f Size { get; set; }
+        public Vector2f Size { get; protected set; }
 
         public List<Button> Buttons { get; private set; }
 
         public Button HitTest(Vector2f screenCoords)
         {
-            Vector2f menuCoords = screenCoords - Position;
-
-            foreach (Button button in Buttons)
+            if (screenCoords.X > Position.X 
+             && screenCoords.X < Position.X + Size.X
+             && screenCoords.Y > Position.Y
+             && screenCoords.Y < Position.Y + Size.Y)
             {
-                if (menuCoords.X > button.Position.X && menuCoords.X < button.Position.X + button.Size.X
-                    && menuCoords.Y > button.Position.Y && menuCoords.Y < button.Position.Y + button.Size.Y)
+                Vector2f menuCoords = screenCoords - Position;
+
+                foreach (Button button in Buttons)
                 {
-                    return button;
+                    if (menuCoords.X > button.Position.X && menuCoords.X < button.Position.X + button.Size.X
+                        && menuCoords.Y > button.Position.Y && menuCoords.Y < button.Position.Y + button.Size.Y)
+                    {
+                        return button;
+                    }
                 }
             }
 
