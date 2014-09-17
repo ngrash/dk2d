@@ -25,6 +25,7 @@ namespace DK2D.Actions
             {
                 minedGold = goldSeam.Quantity;
                 goldSeam.Quantity = 0;
+                Target.Terrain = new DirtPath();
             }
 
             MapCell treasury = Creature.Cell.FindNearest<Treasury>();
