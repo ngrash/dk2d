@@ -17,7 +17,7 @@ namespace DK2D.Actions
             Target.Terrain = new DirtPath();
             Target.IsSelected = false;
 
-            Creature.MoveTo(Target.Position);
+            Creature.MoveTo(Target);
         }
     }
 }

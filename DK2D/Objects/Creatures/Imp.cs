@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 using DK2D.Actions;
@@ -14,43 +13,17 @@ namespace DK2D.Objects.Creatures
     {
         public const int ScanRadius = 5;
 
-        private const float Speed = 80;
-
-        private GameAction _currentAction;
-
         public Imp(Game game)
             : base(game)
         {
             Color = Colors.CreatureImp;
             BoundingRadius = 5;
+            Speed = 80;
         }
 
-        public override void Update(float secondsElapsed)
+        protected override void Idle()
         {
-            bool isAtDestination = Path.Count == 0;
-            if (!isAtDestination)
-            {
-                Vector2f nextPoint = Path[0];
-                bool reachedNextPoint = MoveTowardsPoint(nextPoint, secondsElapsed);
-                if (reachedNextPoint)
-                {
-                    Path.RemoveAt(0);
-                }
-            }
-            else if (_currentAction != null)
-            {
-                _currentAction.Perform(secondsElapsed);
-                if (_currentAction.IsDone)
-                {
-                    _currentAction.Cell = null;
-                    _currentAction.Creature = null;
-                    _currentAction = null;
-                }
-            }
-            else
-            {
-                FindSomethingToDo();
-            }
+            FindSomethingToDo();
         }
 
         private void FindSomethingToDo()
@@ -67,33 +40,10 @@ namespace DK2D.Objects.Creatures
             if (nearestAction != null)
             {
                 nearestAction.Creature = this;
-                _currentAction = nearestAction;
-
                 nearestAction.Cell.Highlight(Colors.OverlayRed);
 
-                MoveTo(nearestAction.Cell.Position);
+                MoveTo(nearestAction);
             }
-        }
-
-        private bool MoveTowardsPoint(Vector2f goal, float elapsed)
-        {
-            const float Epsilon = 0.1f;
-
-            if (Math.Abs(goal.X - Position.X) < Epsilon && Math.Abs(goal.Y - Position.Y) < Epsilon)
-            {
-                return true;
-            }
-
-            // http://gamedev.stackexchange.com/a/28337
-            Vector2f direction = (goal - Position).Normalize();
-            Position += direction * (Speed * elapsed);
-
-            if (Math.Abs(direction.Dot((goal - Position).Normalize()) + 1) < Epsilon)
-            {
-                Position = goal;
-            }
-
-            return Math.Abs(Position.X - goal.X) < Epsilon && Math.Abs(Position.Y - goal.Y) < Epsilon;
         }
 
         private IEnumerable<GameAction> ScanEnvironment(Vector2i cellIndex, Map.Map map)
@@ -132,7 +82,14 @@ namespace DK2D.Objects.Creatures
                 {
                     selectedAdjacent.Highlight(Colors.OverlayGreen);
 
-                    yield return new Dig { Cell = cell, Target = selectedAdjacent };
+                    if (selectedAdjacent.Terrain is GoldSeam)
+                    {
+                        yield return new MineGold { Cell = cell, Target = selectedAdjacent };
+                    }
+                    else
+                    {
+                        yield return new Dig { Cell = cell, Target = selectedAdjacent };
+                    }
                 }
             }
             else

@@ -1,10 +1,13 @@
 namespace DK2D.Terrains
 {
-    class GoldSeam : Terrain
+    internal class GoldSeam : Terrain
     {
         public GoldSeam()
         {
             Color = Colors.TerrainGold;
+            Quantity = 250;
         }
+
+        public int Quantity { get; set; }
     }
 }

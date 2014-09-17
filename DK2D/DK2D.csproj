@@ -60,6 +60,7 @@
     <Compile Include="Actions\EatChicken.cs" />
     <Compile Include="Actions\GameAction.cs" />
     <Compile Include="Actions\LaborGameAction.cs" />
+    <Compile Include="Actions\StoreGold.cs" />
     <Compile Include="Actions\WalkAround.cs" />
     <Compile Include="Actions\MineGold.cs" />
     <Compile Include="Actions\PickupGold.cs" />
