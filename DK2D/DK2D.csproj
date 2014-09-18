@@ -115,6 +115,8 @@
     <Compile Include="Textures.cs" />
     <Compile Include="UI\Button.cs" />
     <Compile Include="UI\Menu.cs" />
+    <Compile Include="UI\RoomButton.cs" />
+    <Compile Include="UI\RoomMenu.cs" />
     <Compile Include="UI\TerrainButton.cs" />
     <Compile Include="UI\TerrainMenu.cs" />
     <Compile Include="Vector2fExtensions.cs" />

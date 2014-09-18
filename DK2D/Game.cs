@@ -38,7 +38,8 @@ namespace DK2D
 
         private readonly List<Menu> _menus = new List<Menu>
             {
-                new TerrainMenu { Position = new Vector2f(10, WindowHeight - 60) }
+                new TerrainMenu { Position = new Vector2f(10, WindowHeight - 60) },
+                new RoomMenu { Position = new Vector2f(300, WindowHeight - 60) }
             };
 
         private Map.Map _map;

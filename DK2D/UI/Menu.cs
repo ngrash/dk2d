@@ -38,5 +38,26 @@ namespace DK2D.UI
 
             return null;
         }
+
+        protected void Add(Button button)
+        {
+            float x = 9;
+            float y = 9;
+
+            if (Buttons.Count > 0)
+            {
+                Button last = Buttons[Buttons.Count - 1];
+                x = last.Position.X + last.Size.X + 9f;
+                y = last.Position.Y;
+            }
+
+            button.Position = new Vector2f(x, y);
+            button.Size = new Vector2f(32, 32);
+
+            Buttons.Add(button);
+
+            // Resize menu
+            Size = new Vector2f(button.Position.X + button.Size.X + 9, button.Size.Y + 9 + 9);
+        }
     }
 }
