@@ -138,6 +138,13 @@ namespace DK2D
                     }
                 }
             }
+            else if (keyEventArgs.Code == Keyboard.Key.I)
+            {
+                if (_cellUnderMouse.IsPassable && _cellUnderMouse.IsClaimed)
+                {
+                    _gameObjects.Add(new Imp(this) { Position = _mouseCoords });
+                }
+            }
         }
 
         private void WindowOnMouseMoved(object sender, MouseMoveEventArgs mouseMoveEventArgs)
