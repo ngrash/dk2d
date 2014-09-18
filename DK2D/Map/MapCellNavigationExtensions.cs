@@ -83,7 +83,7 @@ namespace DK2D.Map
 
         public static MapCell FindNearest<TRoom>(this MapCell current) where TRoom : Room
         {
-            return current.FindNearest(cell => cell.Terrain != null && cell.Terrain.GetType() == typeof(TRoom));
+            return current.FindNearest(cell => cell.Room != null && cell.Room.GetType() == typeof(TRoom));
         }
 
         public static MapCell FindNearest(this MapCell current, Predicate<MapCell> condition)
