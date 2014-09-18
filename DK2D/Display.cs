@@ -61,7 +61,11 @@ namespace DK2D
                                 new RectangleShape { Position = position, Size = size, FillColor = cell.Terrain.Color });
                         }
                     }
-                    
+
+                    if (cell.Room != null)
+                    {
+                        _target.Draw(new RectangleShape { Position = position, Size = size, FillColor = Color.Green});
+                    }
 
                     if (cell.IsSelected)
                     {
